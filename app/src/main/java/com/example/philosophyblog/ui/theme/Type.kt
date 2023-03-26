@@ -2,6 +2,8 @@ package com.example.philosophyblog.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -19,17 +21,20 @@ val PhilosophyBlogTypography = Typography(
     h3 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp
+        fontSize = 32.sp,
+        color = Color(0xFF212121)
     ),
     subtitle1 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp
+        fontSize = 18.sp,
+        color = Color(0xFF212121)
     ),
     body1 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Bold,
-        fontSize = 16.sp
+        fontSize = 16.sp,
+        color = Color(0xFF212121)
     )
     /* Other default text styles to override
     button = TextStyle(
