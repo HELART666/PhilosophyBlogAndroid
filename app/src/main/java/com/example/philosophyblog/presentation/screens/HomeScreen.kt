@@ -1,4 +1,4 @@
-package com.example.philosophyblog
+package com.example.philosophyblog.presentation.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -14,7 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.philosophyblog.ui.theme.PhilosophyBlogTheme
+import com.example.philosophyblog.R
+import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 
 // TODO доделать экран
 

@@ -1,4 +1,4 @@
-package com.example.philosophyblog.ui.theme
+package com.example.philosophyblog.presentation.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

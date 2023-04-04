@@ -1,27 +1,24 @@
-package com.example.philosophyblog
+package com.example.philosophyblog.presentation.screens
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.activity.viewModels
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.example.philosophyblog.ui.theme.PhilosophyBlogTheme
+import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
+import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +26,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             PhilosophyBlogTheme {
                 TransparentSystemBars()
-                //StartScreen()
-                HomeScreen()
+                LoginScreen(loginViewModel = loginViewModel)
+                //HomeScreen()
             }
         }
     }

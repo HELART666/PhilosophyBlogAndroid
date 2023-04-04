@@ -1,4 +1,4 @@
-package com.example.philosophyblog.ui.theme
+package com.example.philosophyblog.presentation.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

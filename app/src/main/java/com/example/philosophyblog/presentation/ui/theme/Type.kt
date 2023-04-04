@@ -1,4 +1,4 @@
-package com.example.philosophyblog.ui.theme
+package com.example.philosophyblog.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable

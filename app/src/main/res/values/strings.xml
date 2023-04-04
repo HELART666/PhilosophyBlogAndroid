@@ -4,4 +4,6 @@
     <string name="subtitle_enter_your_data">Введите имя пользователя или Email</string>
     <string name="login">Имя пользователя / Email</string>
     <string name="password">Пароль</string>
+    <string name="remember_me">Запомнить меня</string>
+    <string name="log_in">Войти</string>
 </resources>
