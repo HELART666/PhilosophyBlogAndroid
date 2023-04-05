@@ -1,6 +1,9 @@
 package com.example.philosophyblog.di.modules
 
 import com.example.philosophyblog.data.api.AuthService
+import com.example.philosophyblog.data.api.helpers.AuthAuthenticator
+import com.example.philosophyblog.data.api.helpers.AuthInterceptor
+import com.example.philosophyblog.data.sharedprefs.AuthSharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +18,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "localhost:4444/api"
+    private const val BASE_URL = "http://192.168.42.135:4444"
 
     @Singleton
     @Provides
@@ -26,10 +29,29 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun providesOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor) =
+    fun providesAuthInterceptor(authSharedPreferences: AuthSharedPreferences) =
+        AuthInterceptor(authSharedPreferences)
+
+    @Singleton
+    @Provides
+    fun providesAuthAuthenticator(
+        authSharedPreferences: AuthSharedPreferences,
+        authService: dagger.Lazy<AuthService>,
+    ) = AuthAuthenticator(authSharedPreferences, authService)
+
+
+    @Singleton
+    @Provides
+    fun providesOkHttpClient(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+        authAuthenticator: AuthAuthenticator,
+    ) =
         OkHttpClient()
             .newBuilder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(httpLoggingInterceptor)
+            .authenticator(authAuthenticator)
             .build()
 
     @Singleton
