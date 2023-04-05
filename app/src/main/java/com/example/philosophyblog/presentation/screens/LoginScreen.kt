@@ -60,10 +60,10 @@ fun LoginScreen(
                         ),
                         shape = CircleShape,
                         onClick = {
-//                            loginViewModel.sendAuthRequest(
-//                                login = ,
-//                                password =
-//                            )
+                            loginViewModel.sendAuthRequest(
+                                login = "HELART",
+                                password = "123456789Aa"
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()
