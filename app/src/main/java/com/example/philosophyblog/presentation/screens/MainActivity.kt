@@ -11,6 +11,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.rememberNavController
+import com.example.philosophyblog.presentation.navigation.PhilosophyBlogNavigation
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -18,22 +20,27 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         setContent {
             PhilosophyBlogTheme {
+                val navController = rememberNavController()
+
                 TransparentSystemBars()
-                LoginScreen(loginViewModel = loginViewModel)
+
+                PhilosophyBlogNavigation(
+                    navController = navController
+                )
+
                 loginViewModel.accessTokenLiveData.observe(this) {
                     if (it != null) {
                         Log.d("AAAAAAAAA", it)
                     }
                 }
-                //HomeScreen()
             }
         }
     }

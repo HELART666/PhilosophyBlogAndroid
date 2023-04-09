@@ -21,10 +21,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.philosophyblog.R
+import com.example.philosophyblog.utils.TextFieldState
 
-@Preview
+
 @Composable
-fun LoginForm() {
+fun LoginForm(
+    loginState: TextFieldState,
+    passwordState: TextFieldState,
+) {
     Column(
         modifier = Modifier
             .padding(
@@ -32,9 +36,15 @@ fun LoginForm() {
             )
     ) {
         EnterTextHeader(text = stringResource(id = R.string.login))
-        LoginTextField(placeHolder = stringResource(id = R.string.login))
+        LoginTextField(
+            placeHolder = stringResource(id = R.string.login),
+            loginState = loginState
+        )
         EnterTextHeader(text = stringResource(id = R.string.password))
-        PasswordTextField(placeHolder = stringResource(id = R.string.password))
+        PasswordTextField(
+            placeHolder = stringResource(id = R.string.password),
+            passwordState = passwordState
+        )
         CheckBoxRememberMe()
     }
 }
@@ -52,19 +62,21 @@ fun EnterTextHeader(text: String) {
 }
 
 @Composable
-fun LoginTextField(placeHolder: String) {
+fun LoginTextField(
+    placeHolder: String,
+    loginState: TextFieldState,
+) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = colorResource(id = R.color.primary),
         backgroundColor = colorResource(id = R.color.primary).copy(alpha = 0.4f)
     )
 
-    var text by remember { mutableStateOf(TextFieldValue("")) }
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         TextField(
-            value = text,
+            value = loginState.text,
             textStyle = MaterialTheme.typography.body1,
             onValueChange = {
-                text = it
+                loginState.text = it
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
@@ -90,12 +102,15 @@ fun LoginTextField(placeHolder: String) {
 }
 
 @Composable
-fun PasswordTextField(placeHolder: String) {
+fun PasswordTextField(
+    placeHolder: String,
+    passwordState: TextFieldState,
+) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = colorResource(id = R.color.primary),
         backgroundColor = colorResource(id = R.color.primary).copy(alpha = 0.4f)
     )
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+
     var passwordVisibility by remember {
         mutableStateOf(false)
     }
@@ -107,9 +122,9 @@ fun PasswordTextField(placeHolder: String) {
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         TextField(
-            value = text,
+            value = passwordState.text,
             onValueChange = {
-                text = it
+                passwordState.text = it
             },
             visualTransformation = if (!passwordVisibility) PasswordVisualTransformation() else VisualTransformation.None,
             keyboardOptions = KeyboardOptions(

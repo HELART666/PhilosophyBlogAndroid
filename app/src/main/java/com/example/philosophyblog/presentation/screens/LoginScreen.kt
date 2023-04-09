@@ -1,12 +1,13 @@
 package com.example.philosophyblog.presentation.screens
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -16,15 +17,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
+import com.example.philosophyblog.utils.TextFieldState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    onLoginButtonClick: () -> Unit
 ) {
+    var loginState = remember { TextFieldState() }
+    var passwordState = remember { TextFieldState() }
+
     PhilosophyBlogTheme {
         Column(
             modifier = Modifier
@@ -48,7 +55,10 @@ fun LoginScreen(
             ) {
                 Header(text = stringResource(id = R.string.header_hello))
                 Subtitle(text = stringResource(id = R.string.subtitle_enter_your_data))
-                LoginForm()
+                LoginForm(
+                    loginState = loginState,
+                    passwordState = passwordState
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxHeight(),
@@ -61,9 +71,10 @@ fun LoginScreen(
                         shape = CircleShape,
                         onClick = {
                             loginViewModel.sendAuthRequest(
-                                login = "HELART",
-                                password = "123456789Aa"
+                                login = loginState.text,
+                                password = passwordState.text
                             )
+                            //onLoginButtonClick()
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -89,10 +100,13 @@ fun LoginScreen(
     }
 }
 
+@Preview
 @Composable
-fun NavBackToolbar() {
+fun NavBackToolbar(title: String = "") {
     TopAppBar(
-        title = {},
+        title = {
+            Text(text = title)
+        },
         navigationIcon = {
             IconButton(
                 onClick = {},

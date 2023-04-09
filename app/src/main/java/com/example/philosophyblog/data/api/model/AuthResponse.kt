@@ -10,5 +10,7 @@ data class AuthResponse(
     @SerializedName("refreshToken")
     val refreshToken: String? = null,
     @SerializedName("userId")
-    val userId: String? = null
+    val userId: String? = null,
+    @SerializedName("login")
+    val login: String? = null
 )

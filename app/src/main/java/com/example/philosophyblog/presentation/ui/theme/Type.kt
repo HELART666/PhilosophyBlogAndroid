@@ -24,6 +24,12 @@ val PhilosophyBlogTypography = Typography(
         fontSize = 32.sp,
         color = Color(0xFF212121)
     ),
+    h4 = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        color = Color(0xFF212121)
+    ),
     subtitle1 = TextStyle(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
@@ -34,6 +40,12 @@ val PhilosophyBlogTypography = Typography(
         fontFamily = fonts,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
+        color = Color(0xFF212121)
+    ),
+    body2 = TextStyle(
+        fontFamily = fonts,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
         color = Color(0xFF212121)
     )
     /* Other default text styles to override

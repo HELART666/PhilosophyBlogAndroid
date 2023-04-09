@@ -11,14 +11,17 @@ import com.example.philosophyblog.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val sendAuthRequestUseCase: SendAuthRequestUseCase,
+    private val saveUserLoginUseCase: SaveUserLoginUseCase,
+    private val saveUserPasswordUseCase: SaveUserPasswordUseCase,
     private val getAccessTokenToSharedPreferencesUseCase: GetAccessTokenToSharedPreferencesUseCase,
     private val getRefreshTokenToSharedPreferencesUseCase: GetRefreshTokenToSharedPreferencesUseCase,
     private val saveAccessTokenToSharedPreferencesUseCase: SaveAccessTokenToSharedPreferencesUseCase,
-    private val saveRefreshTokenToSharedPreferencesUseCase: SaveRefreshTokenToSharedPreferencesUseCase
+    private val saveRefreshTokenToSharedPreferencesUseCase: SaveRefreshTokenToSharedPreferencesUseCase,
 ) : ViewModel() {
     private val authResponse = MutableLiveData<ScreenState<AuthResponse>>()
     val authResponseLiveData: LiveData<ScreenState<AuthResponse>> = authResponse
@@ -45,18 +48,24 @@ class LoginViewModel @Inject constructor(
                 )
             ).let { state ->
                 if (state is ScreenState.Success) {
-                    state.data?.accessToken?.let {accessToken ->
+                    state.data?.login?.let { email ->
+                        saveUserLoginUseCase.execute(
+                            login = login
+                        )
+                    }
+                    saveUserPasswordUseCase.execute(
+                        password = password
+                    )
+                    state.data?.accessToken?.let { accessToken ->
                         saveAccessTokenToSharedPreferencesUseCase.execute(
                             accessToken = accessToken
                         )
                     }
-
-                    state.data?.refreshToken?.let {refreshToken ->
+                    state.data?.refreshToken?.let { refreshToken ->
                         saveRefreshTokenToSharedPreferencesUseCase.execute(
                             refreshToken = refreshToken
                         )
                     }
-
                 }
                 authResponse.value = state
             }

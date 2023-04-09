@@ -6,4 +6,7 @@
     <string name="password">Пароль</string>
     <string name="remember_me">Запомнить меня</string>
     <string name="log_in">Войти</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="edit">Ред.</string>
+    <string name="bio">Биография</string>
 </resources>
