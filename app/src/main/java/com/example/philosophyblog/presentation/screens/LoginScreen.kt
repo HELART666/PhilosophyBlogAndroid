@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
+import com.example.philosophyblog.utils.ScreenState
 import com.example.philosophyblog.utils.TextFieldState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
@@ -31,6 +33,10 @@ fun LoginScreen(
 ) {
     var loginState = remember { TextFieldState() }
     var passwordState = remember { TextFieldState() }
+
+    val authState = loginViewModel.authResponseLiveData.observeAsState()
+
+
 
     PhilosophyBlogTheme {
         Column(
@@ -45,6 +51,21 @@ fun LoginScreen(
                 )
                 .fillMaxHeight()
         ) {
+
+            when (authState.value) {
+                is ScreenState.Success<*> -> {
+                    Log.d("AAAAADDDDD", "Success")
+                }
+                is ScreenState.Error<*> -> {
+                    Log.d("AAAAADDDDD", "Errrrrr")
+                }
+                is ScreenState.Loading<*> -> {
+                    LoadingScreen()
+                }
+                else -> {}
+            }
+
+
             NavBackToolbar()
             Column(
                 modifier = Modifier

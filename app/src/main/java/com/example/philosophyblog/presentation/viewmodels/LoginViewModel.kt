@@ -41,6 +41,7 @@ class LoginViewModel @Inject constructor(
         password: String,
     ) {
         viewModelScope.launch {
+            authResponse.value = ScreenState.Loading()
             sendAuthRequestUseCase.execute(
                 AuthRequest(
                     login = login,
@@ -48,7 +49,7 @@ class LoginViewModel @Inject constructor(
                 )
             ).let { state ->
                 if (state is ScreenState.Success) {
-                    state.data?.login?.let { email ->
+                    state.data?.login?.let { login ->
                         saveUserLoginUseCase.execute(
                             login = login
                         )
