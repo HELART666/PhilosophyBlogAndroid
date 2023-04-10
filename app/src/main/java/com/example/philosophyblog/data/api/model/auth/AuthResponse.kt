@@ -1,4 +1,4 @@
-package com.example.philosophyblog.data.api.model
+package com.example.philosophyblog.data.api.model.auth
 
 import com.google.gson.annotations.SerializedName
 

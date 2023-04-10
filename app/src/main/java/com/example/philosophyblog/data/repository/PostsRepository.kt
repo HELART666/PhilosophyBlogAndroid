@@ -1,20 +1,20 @@
 package com.example.philosophyblog.data.repository
 
 import com.example.philosophyblog.data.api.RemoteDataSource
-import com.example.philosophyblog.data.api.model.auth.AuthRequest
-import com.example.philosophyblog.data.api.model.auth.AuthResponse
+import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.utils.BaseApiResponse
 import com.example.philosophyblog.utils.ScreenState
 import javax.inject.Inject
 
-class AuthRepository @Inject constructor(
+class PostsRepository @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) : BaseApiResponse() {
 
-    suspend fun sendAuthRequest(body: AuthRequest): ScreenState<AuthResponse> {
+    suspend fun getUserInfo(url: String): ScreenState<UserInfoResponse> {
         return safeApiCall {
-            remoteDataSource.sendAuthRequest(body = body)
+            remoteDataSource.getUserInfo(
+                url = url
+            )
         }
     }
-
 }

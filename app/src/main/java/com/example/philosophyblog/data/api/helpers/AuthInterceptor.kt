@@ -16,8 +16,8 @@ class AuthInterceptor @Inject constructor(
                 "Authorization", "Bearer $token"
             )
         }
-        Log.d("AUTHSHAREDPREFERENCESSSSSSSSSS", "${authSharedPreferences.accessToken}")
-        Log.d("AUTHSHAREDPREFERENCESSSSSSSSSS", "${authSharedPreferences.refreshToken}")
+//        Log.d("AUTHSHAREDPREFERENCESSSSSSSSSS", "${authSharedPreferences.accessToken}")
+//        Log.d("AUTHSHAREDPREFERENCESSSSSSSSSS", "${authSharedPreferences.refreshToken}")
         val buildRequest = request.build()
         return chain.proceed(buildRequest)
     }

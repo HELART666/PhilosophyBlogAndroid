@@ -1,8 +1,8 @@
 package com.example.philosophyblog.presentation.screens
 
-import android.util.Log
-import android.widget.Toast
+
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -16,6 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,15 +30,13 @@ import com.example.philosophyblog.utils.TextFieldState
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = hiltViewModel(),
-    onLoginButtonClick: () -> Unit
+    onLoginButtonClick: () -> Unit,
+    onSignUpButtonClick: () -> Unit,
 ) {
-    var loginState = remember { TextFieldState() }
-    var passwordState = remember { TextFieldState() }
+    val loginState = remember { TextFieldState() }
+    val passwordState = remember { TextFieldState() }
 
     val authState = loginViewModel.authResponseLiveData.observeAsState()
-
-
-
 
     PhilosophyBlogTheme {
         Column(
@@ -54,20 +53,20 @@ fun LoginScreen(
         ) {
 
             when (authState.value) {
-                is ScreenState.Success<*> -> {
-                    Log.d("AAAAADDDDD", "Success")
+                is ScreenState.Success -> {
+                    // navigate to UserProfileScreen
+                    onLoginButtonClick()
                 }
-                is ScreenState.Error<*> -> {
-                    Log.d("AAAAADDDDD", "Errrrrr")
+                is ScreenState.Error -> {
+
                 }
-                is ScreenState.Loading<*> -> {
+                is ScreenState.Loading -> {
                     LoadingScreen()
                 }
                 else -> {}
             }
 
 
-            NavBackToolbar()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -80,6 +79,23 @@ fun LoginScreen(
                 LoginForm(
                     loginState = loginState,
                     passwordState = passwordState
+                )
+                Text(
+                    text = stringResource(id = R.string.sign_up),
+                    modifier = Modifier
+                        .clickable {
+                            onSignUpButtonClick()
+                        }
+                        .padding(
+                            top = dimensionResource(id = R.dimen.small_padding)
+                        )
+                        .defaultMinSize(
+                            minHeight = 1.dp,
+                            minWidth = 1.dp
+                        ),
+                    textDecoration = TextDecoration.Underline,
+                    color = colorResource(id = R.color.primary),
+                    style = MaterialTheme.typography.h4
                 )
                 Box(
                     modifier = Modifier
@@ -96,7 +112,6 @@ fun LoginScreen(
                                 login = loginState.text,
                                 password = passwordState.text
                             )
-                            onLoginButtonClick()
                         },
                         modifier = Modifier
                             .fillMaxWidth()

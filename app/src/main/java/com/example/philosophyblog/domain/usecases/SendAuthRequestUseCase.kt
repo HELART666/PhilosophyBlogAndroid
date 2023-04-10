@@ -1,6 +1,6 @@
 package com.example.philosophyblog.domain.usecases
 
-import com.example.philosophyblog.data.api.model.AuthRequest
+import com.example.philosophyblog.data.api.model.auth.AuthRequest
 import com.example.philosophyblog.data.repository.AuthRepository
 import javax.inject.Inject
 

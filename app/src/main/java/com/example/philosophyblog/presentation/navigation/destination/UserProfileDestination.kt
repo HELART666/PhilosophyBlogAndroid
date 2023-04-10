@@ -5,9 +5,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.philosophyblog.presentation.screens.UserProfileScreen
 
-fun NavGraphBuilder.userProfile() {
+fun NavGraphBuilder.userProfile(
+    onEditUserProfileButton: () -> Unit
+) {
     composable("userProfile") {
-        UserProfileScreen()
+        UserProfileScreen(
+            onEditUserProfileButton = {
+                onEditUserProfileButton()
+            }
+        )
     }
 }
 

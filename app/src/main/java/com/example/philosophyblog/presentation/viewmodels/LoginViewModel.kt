@@ -4,14 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.philosophyblog.data.api.model.AuthRequest
-import com.example.philosophyblog.data.api.model.AuthResponse
+import com.example.philosophyblog.data.api.model.auth.AuthRequest
+import com.example.philosophyblog.data.api.model.auth.AuthResponse
 import com.example.philosophyblog.domain.usecases.*
 import com.example.philosophyblog.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
@@ -78,5 +77,4 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
-
 }

@@ -20,12 +20,10 @@ class AuthAuthenticator @Inject constructor(
         }
         val sessionDataResponse = refreshTokenResponse.body()
         if (refreshTokenResponse.isSuccessful && sessionDataResponse != null) {
-            Log.d("Authenticator", "shared ${sessionDataResponse.accessToken}")
-            Log.d("Authenticator", "shared ${sessionDataResponse.refreshToken}")
+
             authSharedPreferences.accessToken = sessionDataResponse.accessToken
             authSharedPreferences.refreshToken = sessionDataResponse.refreshToken
-            Log.d("Authenticator", "session ${sessionDataResponse.accessToken}")
-            Log.d("Authenticator", "session ${sessionDataResponse.refreshToken}")
+
             // retry request with the new tokens
             return response.request
                 .newBuilder()

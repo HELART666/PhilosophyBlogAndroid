@@ -1,6 +1,8 @@
 package com.example.philosophyblog.di.modules
 
 import com.example.philosophyblog.data.api.AuthService
+import com.example.philosophyblog.data.api.UserService
+import com.example.philosophyblog.data.api.SignUpService
 import com.example.philosophyblog.data.api.helpers.AuthAuthenticator
 import com.example.philosophyblog.data.api.helpers.AuthInterceptor
 import com.example.philosophyblog.data.sharedprefs.AuthSharedPreferences
@@ -18,7 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "http://192.168.43.11:4444"
+    private const val BASE_URL = "http://192.168.42.135:4444"
 
     @Singleton
     @Provides
@@ -67,5 +69,15 @@ object NetworkModule {
     @Provides
     fun provideAuthService(retrofit: Retrofit) =
         retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideSignUpService(retrofit: Retrofit) =
+        retrofit.create(SignUpService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideUserPostsService(retrofit: Retrofit) =
+        retrofit.create(UserService::class.java)
 
 }

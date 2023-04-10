@@ -1,14 +1,12 @@
 package com.example.philosophyblog.presentation.screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -17,9 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.philosophyblog.R
 import com.example.philosophyblog.utils.TextFieldState
 
@@ -36,16 +32,15 @@ fun LoginForm(
             )
     ) {
         EnterTextHeader(text = stringResource(id = R.string.login))
-        LoginTextField(
+        FormTextField(
             placeHolder = stringResource(id = R.string.login),
-            loginState = loginState
+            fieldState = loginState
         )
         EnterTextHeader(text = stringResource(id = R.string.password))
         PasswordTextField(
             placeHolder = stringResource(id = R.string.password),
             passwordState = passwordState
         )
-        CheckBoxRememberMe()
     }
 }
 
@@ -62,9 +57,9 @@ fun EnterTextHeader(text: String) {
 }
 
 @Composable
-fun LoginTextField(
+fun FormTextField(
     placeHolder: String,
-    loginState: TextFieldState,
+    fieldState: TextFieldState,
 ) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = colorResource(id = R.color.primary),
@@ -73,10 +68,10 @@ fun LoginTextField(
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         TextField(
-            value = loginState.text,
+            value = fieldState.text,
             textStyle = MaterialTheme.typography.body1,
             onValueChange = {
-                loginState.text = it
+                fieldState.text = it
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
@@ -155,33 +150,6 @@ fun PasswordTextField(
                 unfocusedIndicatorColor = colorResource(id = R.color.primary),
                 cursorColor = colorResource(R.color.primary)
             )
-        )
-    }
-
-
-}
-
-@Composable
-fun CheckBoxRememberMe() {
-    var checked by remember {
-        mutableStateOf(false)
-    }
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = {
-                checked = it
-            },
-            colors = CheckboxDefaults.colors(
-                checkedColor = colorResource(id = R.color.primary),
-                uncheckedColor = colorResource(id = R.color.primary),
-            ),
-        )
-        Text(
-            text = stringResource(id = R.string.remember_me),
-            style = MaterialTheme.typography.body1
         )
     }
 }

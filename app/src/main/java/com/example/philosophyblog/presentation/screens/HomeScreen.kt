@@ -63,22 +63,6 @@ fun HeaderToolbar() {
                         )
                 )
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_notifications),
-                        contentDescription = "Notification"
-                    )
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_saves),
-                        contentDescription = "Saves"
-                    )
-                }
-            }
         }
     }
 }

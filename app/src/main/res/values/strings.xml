@@ -2,11 +2,17 @@
     <string name="app_name">PhilosophyBlog</string>
     <string name="header_hello">Привет! &#128075;</string>
     <string name="subtitle_enter_your_data">Введите имя пользователя или Email</string>
+    <string name="subtitle_enter_your_data_sign_in">Введите ваши данные для регистрации</string>
     <string name="login">Имя пользователя / Email</string>
+    <string name="email">Email</string>
+    <string name="your_login">Логин</string>
     <string name="password">Пароль</string>
+    <string name="repeat_password">Повторите пароль</string>
     <string name="remember_me">Запомнить меня</string>
     <string name="log_in">Войти</string>
     <string name="edit_profile">Редактировать профиль</string>
     <string name="edit">Ред.</string>
     <string name="bio">Биография</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="password_error">Пароли не совпадают!</string>
 </resources>

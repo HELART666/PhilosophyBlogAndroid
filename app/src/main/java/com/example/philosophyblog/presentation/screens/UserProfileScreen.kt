@@ -11,28 +11,32 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
+import com.example.philosophyblog.utils.ScreenState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Composable
 fun UserProfileScreen(
-    userProfileViewModel: UserProfileViewModel = hiltViewModel()
+    userProfileViewModel: UserProfileViewModel = hiltViewModel(),
+    onEditUserProfileButton: () -> Unit,
 ) {
 
     val login = userProfileViewModel.userLoginLiveData.observeAsState()
     val email = userProfileViewModel.userEmailLiveData.observeAsState()
+    val userInfo = userProfileViewModel.userInfoStateLiveData.observeAsState()
+    userProfileViewModel.getUserInfo(
+        url = "http://192.168.42.135:4444/api/users/${login.value}"
+    )
 
     PhilosophyBlogTheme {
         Column(
@@ -47,9 +51,21 @@ fun UserProfileScreen(
             UserProfileToolbar()
             UserProfileCard(
                 login = login.value.toString(),
-                email = email.value.toString()
+                email = email.value.toString(),
+                onEditUserProfileButton = onEditUserProfileButton
             )
-            UserInfo()
+            when (userInfo.value) {
+                is ScreenState.Success -> {
+                    UserInfo(
+                        age = userInfo.value?.data?.bio?.age.toString(),
+                        location = userInfo.value?.data?.bio?.location.toString(),
+                        bio = userInfo.value?.data?.bio?.bio.toString(),
+                        quote = userInfo.value?.data?.bio?.quote.toString(),
+                        philosophyDirection = userInfo.value?.data?.bio?.philosophyDirection.toString(),
+                    )
+                }
+                else -> {}
+            }
         }
     }
 }
@@ -94,7 +110,8 @@ fun UserProfileToolbar() {
 @Composable
 fun UserProfileCard(
     login: String,
-    email: String
+    email: String,
+    onEditUserProfileButton: () -> Unit,
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -140,7 +157,7 @@ fun UserProfileCard(
                 backgroundColor = colorResource(id = R.color.white_background)
             ),
             shape = CircleShape,
-            onClick = { /*TODO*/ },
+            onClick = { onEditUserProfileButton() },
             border = BorderStroke(
                 2.dp, color = colorResource(id = R.color.primary),
             ),
@@ -171,7 +188,13 @@ fun UserProfileCard(
 }
 
 @Composable
-fun UserInfo() {
+fun UserInfo(
+    age: String,
+    location: String,
+    bio: String,
+    quote: String,
+    philosophyDirection: String,
+) {
     Column(
         modifier = Modifier
             .padding(
@@ -179,17 +202,15 @@ fun UserInfo() {
             )
     ) {
         UserBioHeader(text = "Возраст")
-        UserBioDescription(text = "20")
+        UserBioDescription(text = age)
         UserBioHeader(text = "Локация")
-        UserBioDescription(text = "Ульяновск, Россия")
+        UserBioDescription(text = location)
         UserBioHeader(text = "Биография")
-        UserBioDescription(text = "Ровный парень реально, люблю философские рассуждения и всё, что с ними связано")
+        UserBioDescription(text = bio)
         UserBioHeader(text = "Цитата")
-        UserBioDescription(text = "Кто не кто, тот никто")
+        UserBioDescription(text = quote)
         UserBioHeader(text = "Направление")
-        UserBioDescription(text = "Правильное")
-        UserBioHeader(text = "Координаты")
-        UserBioDescription(text = "Туда сюда 13.37")
+        UserBioDescription(text = philosophyDirection)
     }
 }
 
