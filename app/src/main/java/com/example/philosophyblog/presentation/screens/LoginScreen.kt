@@ -38,6 +38,7 @@ fun LoginScreen(
 
 
 
+
     PhilosophyBlogTheme {
         Column(
             modifier = Modifier
@@ -95,7 +96,7 @@ fun LoginScreen(
                                 login = loginState.text,
                                 password = passwordState.text
                             )
-                            //onLoginButtonClick()
+                            onLoginButtonClick()
                         },
                         modifier = Modifier
                             .fillMaxWidth()

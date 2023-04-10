@@ -33,6 +33,19 @@ class AuthSharedPreferences @Inject constructor(context: Context) {
             }
         }
 
+
+    var email: String?
+        get() {
+            return sharedPreferences.getString(USER_EMAIL, null)
+        }
+        set(value) {
+            value?.let {
+                sharedPreferences.edit()
+                    .putString(USER_EMAIL, it)
+                    .apply()
+            }
+        }
+
     var refreshToken: String?
         get() {
             return sharedPreferences.getString(REFRESH_TOKEN_KEY, null)
@@ -110,6 +123,7 @@ class AuthSharedPreferences @Inject constructor(context: Context) {
         private const val PASSWORD_KEY = "password"
         private const val TOKEN_EXPIRES_AT_KEY = "token_expires_at"
         private const val IS_ACC_DELETED = "is_acc_deleted"
+        private const val USER_EMAIL = "user_email"
     }
 
 }

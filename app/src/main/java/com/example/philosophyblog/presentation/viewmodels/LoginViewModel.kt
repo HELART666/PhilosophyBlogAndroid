@@ -18,6 +18,7 @@ class LoginViewModel @Inject constructor(
     private val sendAuthRequestUseCase: SendAuthRequestUseCase,
     private val saveUserLoginUseCase: SaveUserLoginUseCase,
     private val saveUserPasswordUseCase: SaveUserPasswordUseCase,
+    private val saveUserEmailUseCase: SaveUserEmailUseCase,
     private val getAccessTokenToSharedPreferencesUseCase: GetAccessTokenToSharedPreferencesUseCase,
     private val getRefreshTokenToSharedPreferencesUseCase: GetRefreshTokenToSharedPreferencesUseCase,
     private val saveAccessTokenToSharedPreferencesUseCase: SaveAccessTokenToSharedPreferencesUseCase,
@@ -57,6 +58,11 @@ class LoginViewModel @Inject constructor(
                     saveUserPasswordUseCase.execute(
                         password = password
                     )
+                    state.data?.login?.let { email ->
+                        saveUserEmailUseCase.execute(
+                            email = email
+                        )
+                    }
                     state.data?.accessToken?.let { accessToken ->
                         saveAccessTokenToSharedPreferencesUseCase.execute(
                             accessToken = accessToken

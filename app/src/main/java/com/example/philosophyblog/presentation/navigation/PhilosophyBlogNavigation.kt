@@ -16,9 +16,7 @@ fun PhilosophyBlogNavigation(
         startDestination = "login"
     ) {
         login(
-            onLoginButtonClick = {
-                navController.navigateToUserProfile()
-            }
+            onLoginButtonClick = { navController.navigateToUserProfile() }
         )
         userProfile()
     }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,12 +20,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
+import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 
-@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
+//@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Composable
-fun UserProfileScreen() {
+fun UserProfileScreen(
+    userProfileViewModel: UserProfileViewModel = hiltViewModel()
+) {
+
+    val login = userProfileViewModel.userLoginLiveData.observeAsState()
+    val email = userProfileViewModel.userEmailLiveData.observeAsState()
+
     PhilosophyBlogTheme {
         Column(
             modifier = Modifier
@@ -36,7 +45,10 @@ fun UserProfileScreen() {
                 .fillMaxHeight()
         ) {
             UserProfileToolbar()
-            UserProfileCard()
+            UserProfileCard(
+                login = login.value.toString(),
+                email = email.value.toString()
+            )
             UserInfo()
         }
     }
@@ -75,28 +87,15 @@ fun UserProfileToolbar() {
                         )
                 )
             }
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_notifications),
-                        contentDescription = "Notification"
-                    )
-                }
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_saves),
-                        contentDescription = "Saves"
-                    )
-                }
-            }
         }
     }
 }
 
 @Composable
-fun UserProfileCard() {
+fun UserProfileCard(
+    login: String,
+    email: String
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -126,12 +125,12 @@ fun UserProfileCard() {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "Руслан Леушкин",
+                text = login,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = "@rusya_kamushkin",
+                text = email,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
