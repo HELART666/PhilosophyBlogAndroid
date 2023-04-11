@@ -1,5 +1,12 @@
 package com.example.philosophyblog.presentation.screens
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -32,42 +41,78 @@ import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 @Composable
 fun EditUserProfileScreen() {
     PhilosophyBlogTheme {
-        Column(
+        Scaffold(
+            topBar = {
+                NavBackToolbar(stringResource(id = R.string.edit_profile))
+            },
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.small_padding)
+                )
                 .background(
                     color = colorResource(
                         id = R.color.white_background
                     ),
                 )
-                .padding(
-                    top = dimensionResource(id = R.dimen.header_padding),
-                    start = dimensionResource(id = R.dimen.small_padding),
-                    end = dimensionResource(id = R.dimen.small_padding)
-                )
-                .fillMaxHeight()
-        ) {
-            NavBackToolbar(stringResource(id = R.string.edit_profile))
-            EditUserAvatarImage()
-            UserBioHeader(text = "Возраст")
-            EditUserBioDescription()
-            UserBioHeader(text = "Локация")
-            EditUserBioDescription()
-            UserBioHeader(text = "Биография")
-            EditUserBioDescription()
-            UserBioHeader(text = "Цитата")
-            EditUserBioDescription()
-            UserBioHeader(text = "Направление")
-            EditUserBioDescription()
-            UserBioHeader(text = "Координаты")
-            EditUserBioDescription()
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .background(
+                        color = colorResource(
+                            id = R.color.white_background
+                        ),
+                    )
+                    .padding(
+                        paddingValues
+                    )
+                    .fillMaxHeight()
+            ) {
+                EditUserAvatarImage()
+                UserBioHeader(text = "Возраст")
+                EditUserBioDescription()
+                UserBioHeader(text = "Локация")
+                EditUserBioDescription()
+                UserBioHeader(text = "Биография")
+                EditUserBioDescription()
+                UserBioHeader(text = "Цитата")
+                EditUserBioDescription()
+                UserBioHeader(text = "Направление")
+                EditUserBioDescription()
+                UserBioHeader(text = "Координаты")
+                EditUserBioDescription()
+            }
         }
-        
+
+
     }
 }
 
 @Composable
 fun EditUserAvatarImage() {
+    var imageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    val context = LocalContext.current
+    val bitmap = remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        imageUri = uri
+    }
+
+    imageUri?.let {
+        if (Build.VERSION.SDK_INT < 28) {
+            bitmap.value = MediaStore.Images
+                .Media.getBitmap(context.contentResolver, it)
+        } else {
+            val source = ImageDecoder.createSource(context.contentResolver, it)
+            bitmap.value = ImageDecoder.decodeBitmap(source)
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +126,17 @@ fun EditUserAvatarImage() {
         Box(
             contentAlignment = Alignment.BottomEnd
         ) {
-            Image(
+            bitmap.value?.let { bitmap ->
+                Image(
+                    bitmap = bitmap.asImageBitmap(),
+                    contentDescription = "base profile avatar image",
+                    modifier = Modifier
+                        .height(128.dp)
+                        .width(128.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
+            } ?: Image(
                 painter = painterResource(id = R.drawable.base_profile_avatar),
                 contentDescription = "base profile avatar image",
                 modifier = Modifier
@@ -94,7 +149,9 @@ fun EditUserAvatarImage() {
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(id = R.color.primary_second)
                 ),
-                onClick = { /*TODO*/ },
+                onClick = {
+                    launcher.launch("image/*")
+                },
                 modifier = Modifier
                     .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp)
             ) {

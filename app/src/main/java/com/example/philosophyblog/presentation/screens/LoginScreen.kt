@@ -141,26 +141,22 @@ fun LoginScreen(
 @Composable
 fun NavBackToolbar(title: String = "") {
     TopAppBar(
-        title = {
-            Text(text = title)
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = {},
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_go_back_arrow),
-                    contentDescription = "go back nav button"
-                )
-            }
-        },
         backgroundColor = colorResource(id = R.color.white_background),
         elevation = 0.dp,
-        modifier = Modifier
-            .padding(
-                start = dimensionResource(id = R.dimen.smallest_padding)
+        contentPadding = WindowInsets.systemBars
+            .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+            .asPaddingValues(),
+    ) {
+        IconButton(
+            onClick = {},
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_go_back_arrow),
+                contentDescription = "go back nav button"
             )
-    )
+        }
+        Text(text = title)
+    }
 }
 
 @Composable
