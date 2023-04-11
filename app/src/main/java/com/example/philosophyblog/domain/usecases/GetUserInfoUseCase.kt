@@ -1,10 +1,10 @@
 package com.example.philosophyblog.domain.usecases
 
-import com.example.philosophyblog.data.repository.PostsRepository
+import com.example.philosophyblog.data.repository.UserRepository
 import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(
-    private val postsRepository: PostsRepository,
+    private val userRepository: UserRepository,
 ) {
-    suspend fun getUserInfo(url: String) = postsRepository.getUserInfo(url = url)
+    suspend fun getUserInfo(url: String) = userRepository.getUserInfo(url = url)
 }

@@ -35,7 +35,7 @@ fun UserProfileScreen(
     val email = userProfileViewModel.userEmailLiveData.observeAsState()
     val userInfo = userProfileViewModel.userInfoStateLiveData.observeAsState()
     userProfileViewModel.getUserInfo(
-        url = "http://192.168.42.135:4444/api/users/${login.value}"
+        url = "http://192.168.43.11:4444/api/users/${login.value}"
     )
 
     PhilosophyBlogTheme {

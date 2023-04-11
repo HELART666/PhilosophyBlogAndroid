@@ -2,6 +2,7 @@ package com.example.philosophyblog.data.api
 
 import com.example.philosophyblog.data.api.model.auth.AuthRequest
 import com.example.philosophyblog.data.api.model.signUp.SignUpRequest
+import com.example.philosophyblog.data.api.model.user.NewUserData
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
@@ -15,4 +16,9 @@ class RemoteDataSource @Inject constructor(
     suspend fun sendSignUpRequest(body: SignUpRequest) = signUpService.sendSignUpRequest(body = body)
 
     suspend fun getUserInfo(url: String) = userService.getUserInfo(url = url)
+
+    suspend fun updateUserInfo(url: String, body: NewUserData) = userService.updateUserInfo(
+        url = url,
+        body = body
+    )
 }

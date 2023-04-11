@@ -34,12 +34,29 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
+import com.example.philosophyblog.data.api.model.user.Bio
+import com.example.philosophyblog.data.api.model.user.NewUserData
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
+import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
+import com.example.philosophyblog.utils.TextFieldState
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
-@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
+// @Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @Composable
-fun EditUserProfileScreen() {
+fun EditUserProfileScreen(
+    userProfileViewModel: UserProfileViewModel = hiltViewModel()
+) {
+    val ageState = remember { TextFieldState() }
+    val locationState = remember { TextFieldState() }
+    val bioState = remember { TextFieldState() }
+    val quoteState = remember { TextFieldState() }
+    val philosophyDirectionState = remember { TextFieldState() }
+    val userLogin = userProfileViewModel.userLoginLiveData.value
+
+
     PhilosophyBlogTheme {
         Scaffold(
             topBar = {
@@ -70,17 +87,54 @@ fun EditUserProfileScreen() {
             ) {
                 EditUserAvatarImage()
                 UserBioHeader(text = "Возраст")
-                EditUserBioDescription()
+                EditUserBioDescription(
+                    state = ageState
+                )
                 UserBioHeader(text = "Локация")
-                EditUserBioDescription()
+                EditUserBioDescription(
+                    state = locationState
+                )
                 UserBioHeader(text = "Биография")
-                EditUserBioDescription()
+                EditUserBioDescription(
+                    state = bioState
+                )
                 UserBioHeader(text = "Цитата")
-                EditUserBioDescription()
+                EditUserBioDescription(
+                    state = quoteState
+                )
                 UserBioHeader(text = "Направление")
-                EditUserBioDescription()
+                EditUserBioDescription(
+                    state = philosophyDirectionState
+                )
                 UserBioHeader(text = "Координаты")
-                EditUserBioDescription()
+                // TODO EditUserBioDescription()
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = colorResource(id = R.color.primary)
+                    ),
+                    shape = CircleShape,
+                    onClick = {
+                        userProfileViewModel.updateUserInfo(
+                            url = "http://192.168.43.11:4444/api/users/$userLogin",
+                            newUserData = NewUserData(
+                                login = userLogin,
+                                bio = Bio(
+                                    age = ageState.text,
+                                    bio = bioState.text,
+                                    location = locationState.text,
+                                    philosophyDirection = philosophyDirectionState.text
+                                )
+                            )
+                        )
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            bottom = 36.dp
+                        ),) {
+
+                }
             }
         }
 
@@ -166,19 +220,20 @@ fun EditUserAvatarImage() {
 }
 
 @Composable
-fun EditUserBioDescription() {
+fun EditUserBioDescription(
+    state: TextFieldState
+) {
     val customTextSelectionColors = TextSelectionColors(
         handleColor = colorResource(id = R.color.primary),
         backgroundColor = colorResource(id = R.color.primary).copy(alpha = 0.4f)
     )
 
-    var text by remember { mutableStateOf(TextFieldValue("")) }
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         OutlinedTextField(
-            value = text,
+            value = state.text,
             textStyle = MaterialTheme.typography.body1,
             onValueChange = {
-                text = it
+                state.text = it
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email

@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.philosophyblog.data.api.model.user.NewUserData
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.domain.usecases.GetUserLoginUseCase
 import com.example.philosophyblog.domain.usecases.GetUserEmailUseCase
 import com.example.philosophyblog.domain.usecases.GetUserInfoUseCase
+import com.example.philosophyblog.domain.usecases.UpdateUserInfoUseCase
 import com.example.philosophyblog.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,8 +19,9 @@ import javax.inject.Inject
 class UserProfileViewModel @Inject constructor(
     private val getUserLoginUseCase: GetUserLoginUseCase,
     private val getUserEmailUseCase: GetUserEmailUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
-): ViewModel()  {
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val updateUserInfoUseCase: UpdateUserInfoUseCase
+) : ViewModel() {
     private val userLogin = MutableLiveData<String?>()
     val userLoginLiveData: LiveData<String?> = userLogin
     private val userEmail = MutableLiveData<String?>()
@@ -47,7 +50,19 @@ class UserProfileViewModel @Inject constructor(
                 userInfoState.value = state
             }
         }
-
     }
 
+    fun updateUserInfo(
+        url: String,
+        newUserData: NewUserData
+    ) {
+        viewModelScope.launch {
+            updateUserInfoUseCase.execute(
+                url = url,
+                body = newUserData
+            ).let { state ->
+                userInfoState.value = state
+            }
+        }
+    }
 }
