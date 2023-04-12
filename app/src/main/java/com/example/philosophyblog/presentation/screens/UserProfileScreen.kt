@@ -1,16 +1,17 @@
 package com.example.philosophyblog.presentation.screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -22,49 +23,81 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
-import com.example.philosophyblog.utils.ScreenState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun UserProfileScreen(
     userProfileViewModel: UserProfileViewModel = hiltViewModel(),
     onEditUserProfileButton: () -> Unit,
 ) {
-
-    val login = userProfileViewModel.userLoginLiveData.observeAsState()
     val email = userProfileViewModel.userEmailLiveData.observeAsState()
     val userInfo = userProfileViewModel.userInfoStateLiveData.observeAsState()
-    userProfileViewModel.getUserInfo(
-        url = "http://192.168.43.11:4444/api/users/${login.value}"
-    )
+    var avatar: String? = null
+    if (userInfo.value?.data?.avatarUrl != null && userInfo.value?.data?.avatarUrl?.isNotBlank() == true) {
+        avatar =
+            "http://192.168.42.135:4444/uploads/users/avatars/${userInfo.value?.data?.login}-avatar.jpg"
+    }
+
+
+    // извините меня пожалуйста те, кто это читает
+    // бэкендер не захотел делать автозаполнение списка
+    // я понимаю, что это очень плохо...
+    val personality = userInfo.value?.data?.bio?.personality?.toMutableList()
+    if (personality != null && personality.isEmpty()) {
+        personality.add("5")
+        personality.add("5")
+        personality.add("5")
+        personality.add("5")
+    }
+
 
     PhilosophyBlogTheme {
-        Column(
+        Scaffold(
+            topBar = {
+                UserProfileToolbar()
+            },
             modifier = Modifier
                 .background(
                     color = colorResource(
                         id = R.color.white_background
                     ),
                 )
-                .fillMaxHeight()
-        ) {
-            UserProfileToolbar()
-            UserProfileCard(
-                login = login.value.toString(),
-                email = email.value.toString(),
-                onEditUserProfileButton = onEditUserProfileButton
-            )
-            when (userInfo.value) {
-                is ScreenState.Success -> {
-                    UserInfo(
-                        age = userInfo.value?.data?.bio?.age.toString(),
-                        location = userInfo.value?.data?.bio?.location.toString(),
-                        bio = userInfo.value?.data?.bio?.bio.toString(),
-                        quote = userInfo.value?.data?.bio?.quote.toString(),
-                        philosophyDirection = userInfo.value?.data?.bio?.philosophyDirection.toString(),
+        ) { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .background(
+                        color = colorResource(
+                            id = R.color.white_background
+                        ),
                     )
-                }
-                else -> {}
+                    .padding(
+                        bottom = paddingValues.calculateBottomPadding()
+                    )
+                    .fillMaxHeight()
+            ) {
+                UserProfileCard(
+                    login = userInfo.value?.data?.login.toString(),
+                    email = email.value.toString(),
+                    onEditUserProfileButton = onEditUserProfileButton,
+                    avatarUrl = avatar
+                )
+                UserInfo(
+                    age = userInfo.value?.data?.bio?.age ?: "Не указано",
+                    location = userInfo.value?.data?.bio?.location ?: "Не указано",
+                    bio = userInfo.value?.data?.bio?.bio ?: "Не указано",
+                    quote = userInfo.value?.data?.bio?.quote ?: "Не указано",
+                    philosophyDirection = userInfo.value?.data?.bio?.philosophyDirection
+                        ?: "Не указано",
+                    sex = userInfo.value?.data?.bio?.sex ?: "Не указано",
+                    firstCoord = personality?.get(0)?.toFloat() ?: 5F,
+                    secondCoord = personality?.get(1)?.toFloat() ?: 5F,
+                    thirdCoord = personality?.get(2)?.toFloat() ?: 5F,
+                    fourthCoord = personality?.get(3)?.toFloat() ?: 5F,
+                    goals = userInfo.value?.data?.bio?.goals ?: listOf("Не указаны"),
+                    qualities = userInfo.value?.data?.bio?.qualities ?: listOf("Не указаны")
+                )
             }
         }
     }
@@ -109,6 +142,7 @@ fun UserProfileToolbar() {
 
 @Composable
 fun UserProfileCard(
+    avatarUrl: String?,
     login: String,
     email: String,
     onEditUserProfileButton: () -> Unit,
@@ -123,15 +157,24 @@ fun UserProfileCard(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.base_profile_avatar),
-            contentDescription = "base profile avatar image",
-            modifier = Modifier
-                .height(64.dp)
-                .width(64.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop
-        )
+        if (avatarUrl != null) {
+            CoilImage(
+                imageUrl = avatarUrl,
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape),
+                size = 64
+            )
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.base_profile_avatar),
+                contentDescription = "base profile avatar image",
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+        }
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -194,6 +237,13 @@ fun UserInfo(
     bio: String,
     quote: String,
     philosophyDirection: String,
+    sex: String,
+    firstCoord: Float,
+    secondCoord: Float,
+    thirdCoord: Float,
+    fourthCoord: Float,
+    goals: List<String>,
+    qualities: List<String>,
 ) {
     Column(
         modifier = Modifier
@@ -203,6 +253,8 @@ fun UserInfo(
     ) {
         UserBioHeader(text = "Возраст")
         UserBioDescription(text = age)
+        UserBioHeader(text = "Пол")
+        UserBioDescription(text = sex)
         UserBioHeader(text = "Локация")
         UserBioDescription(text = location)
         UserBioHeader(text = "Биография")
@@ -211,6 +263,40 @@ fun UserInfo(
         UserBioDescription(text = quote)
         UserBioHeader(text = "Направление")
         UserBioDescription(text = philosophyDirection)
+        UserBioHeader(text = "Цели")
+        UserChipsRow(items = goals)
+        UserBioHeader(text = "Качества")
+        UserChipsRow(items = qualities)
+        UserBioHeader(text = "Координаты")
+        Spacer(modifier = Modifier.height(16.dp))
+        UserPhilosophyDirection(
+            left = "Релативизм",
+            right = "Абсолютизм"
+        )
+        UserProfileSlider(
+            value = firstCoord
+        )
+        UserPhilosophyDirection(
+            left = "Идеализм",
+            right = "Материализм"
+        )
+        UserProfileSlider(
+            value = secondCoord
+        )
+        UserPhilosophyDirection(
+            left = "Эскапизм",
+            right = "Реализм"
+        )
+        UserProfileSlider(
+            value = thirdCoord
+        )
+        UserPhilosophyDirection(
+            left = "Диалектика",
+            right = "Метафизика"
+        )
+        UserProfileSlider(
+            value = fourthCoord
+        )
     }
 }
 
@@ -227,6 +313,37 @@ fun UserBioHeader(text: String) {
 }
 
 @Composable
+fun UserPhilosophyDirection(
+    left: String,
+    right: String,
+) {
+    Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Text(
+            text = left,
+            style = MaterialTheme.typography.subtitle2,
+            modifier = Modifier
+                .padding(
+                    top = dimensionResource(id = R.dimen.smaller_padding)
+                ),
+            color = colorResource(id = R.color.disable_gray)
+        )
+        Text(
+            text = right,
+            style = MaterialTheme.typography.subtitle2,
+            modifier = Modifier
+                .padding(
+                    top = dimensionResource(id = R.dimen.smaller_padding)
+                ),
+            color = colorResource(id = R.color.disable_gray)
+        )
+    }
+}
+
+@Composable
 fun UserBioDescription(text: String) {
     Text(
         text = text,
@@ -237,4 +354,45 @@ fun UserBioDescription(text: String) {
             ),
         color = colorResource(id = R.color.disable_gray)
     )
+}
+
+@Composable
+fun UserProfileSlider(value: Float) {
+    Slider(
+        value = value,
+        onValueChange = {},
+        steps = 10,
+        valueRange = 0f..10f,
+        colors = SliderDefaults.colors(
+            activeTickColor = Color.Transparent,
+            inactiveTickColor = Color.Transparent,
+            disabledActiveTrackColor = colorResource(id = R.color.primary_light),
+            disabledActiveTickColor = colorResource(id = R.color.primary_light),
+            disabledThumbColor = colorResource(id = R.color.primary)
+        ),
+        enabled = false
+    )
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun UserChip(item: String) {
+    Chip(
+        modifier = Modifier
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.smallest_padding)
+            ),
+        onClick = { /*TODO*/ }
+    ) {
+        Text(text = item)
+    }
+}
+
+@Composable
+fun UserChipsRow(items: List<String>) {
+    LazyRow {
+        items(items) { goal ->
+            UserChip(item = goal)
+        }
+    }
 }

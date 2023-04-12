@@ -9,15 +9,15 @@ data class Bio(
     @SerializedName("bio")
     val bio: String? = null,
     @SerializedName("goals")
-    val goals: JsonArray? = null,
+    val goals: List<String>? = null,
     @SerializedName("location")
     val location: String? = null,
     @SerializedName("personality")
-    val personality: JsonArray? = null,
-    @SerializedName("philosophyDirection")
+    val personality: List<String>? = null,
+    @SerializedName("philosophyDireсtion")
     val philosophyDirection: String? = null,
     @SerializedName("qualities")
-    val qualities: JsonArray? = null,
+    val qualities: List<String>? = null,
     @SerializedName("quote")
     val quote: String? = null,
     @SerializedName("sex")

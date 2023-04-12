@@ -23,12 +23,14 @@ import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 @Composable
 fun HomeScreen() {
     PhilosophyBlogTheme() {
+
         Column() {
             HeaderToolbar()
 
         }
     }
 }
+
 
 @Composable
 fun HeaderToolbar() {

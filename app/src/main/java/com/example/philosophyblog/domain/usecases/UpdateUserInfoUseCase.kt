@@ -1,7 +1,8 @@
 package com.example.philosophyblog.domain.usecases
 
-import com.example.philosophyblog.data.api.model.user.NewUserData
+
 import com.example.philosophyblog.data.repository.UserRepository
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UpdateUserInfoUseCase @Inject constructor(
@@ -10,10 +11,12 @@ class UpdateUserInfoUseCase @Inject constructor(
 
     suspend fun execute(
         url: String,
-        body: NewUserData
+        avatar: MultipartBody.Part,
+        formUserData: MultipartBody.Part,
     ) = userRepository.updateUserInfo(
         url = url,
-        body = body
+        avatar = avatar,
+        formUserData = formUserData
     )
 
 

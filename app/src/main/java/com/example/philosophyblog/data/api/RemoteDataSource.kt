@@ -1,14 +1,16 @@
 package com.example.philosophyblog.data.api
 
+import com.example.philosophyblog.data.api.model.PostsService
 import com.example.philosophyblog.data.api.model.auth.AuthRequest
 import com.example.philosophyblog.data.api.model.signUp.SignUpRequest
-import com.example.philosophyblog.data.api.model.user.NewUserData
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class RemoteDataSource @Inject constructor(
     private val authService: AuthService,
     private val signUpService: SignUpService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val postsService: PostsService
 ) {
 
     suspend fun sendAuthRequest(body: AuthRequest) = authService.sendAuthRequest(body = body)
@@ -17,8 +19,15 @@ class RemoteDataSource @Inject constructor(
 
     suspend fun getUserInfo(url: String) = userService.getUserInfo(url = url)
 
-    suspend fun updateUserInfo(url: String, body: NewUserData) = userService.updateUserInfo(
+    suspend fun getAllPosts() = postsService.getAllPosts()
+
+    suspend fun updateUserInfo(
+        url: String,
+        avatar: MultipartBody.Part,
+        formUserData: MultipartBody.Part
+    ) = userService.updateUserInfo(
         url = url,
-        body = body
+        avatar = avatar,
+        formUserData = formUserData
     )
 }

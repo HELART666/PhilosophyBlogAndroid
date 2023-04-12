@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetUserInfoUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
-    suspend fun getUserInfo(url: String) = userRepository.getUserInfo(url = url)
+    suspend fun execute(url: String) = userRepository.getUserInfo(url = url)
 }

@@ -11,7 +11,7 @@ fun PhilosophyBlogNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "posts"
     ) {
         login(
             onLoginButtonClick = {
@@ -26,11 +26,14 @@ fun PhilosophyBlogNavigation(
                 navController.navigateToEditUserProfile()
             }
         )
-        editUserProfile()
+        editUserProfile(
+            navController
+        )
         signUp(
             navToProfile = {
                 navController.navigateToUserProfile()
             }
         )
+        posts()
     }
 }

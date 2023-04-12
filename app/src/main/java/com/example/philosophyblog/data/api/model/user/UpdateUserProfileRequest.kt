@@ -1,10 +1,11 @@
 package com.example.philosophyblog.data.api.model.user
 
 import com.google.gson.annotations.SerializedName
+import okhttp3.MultipartBody
 
 data class UpdateUserProfileRequest(
-    @SerializedName("oldLogin")
-    val oldLogin: String,
+    @SerializedName("avatar")
+    val avatar: MultipartBody.Part,
     @SerializedName("user")
-    val user: NewUserData
+    val user: MultipartBody.Part,
 )

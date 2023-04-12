@@ -1,19 +1,22 @@
 package com.example.philosophyblog.data.api
 
-import com.example.philosophyblog.data.api.model.user.NewUserData
+import com.example.philosophyblog.data.api.model.RefreshTokenResponse
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
+import okhttp3.MultipartBody
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.PATCH
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface UserService {
 
     @GET
-    suspend fun getUserInfo(@Url url: String) : Response<UserInfoResponse>
+    suspend fun getUserInfo(@Url url: String): Response<UserInfoResponse>
 
+    @Multipart
     @PATCH
-    suspend fun updateUserInfo(@Url url: String, @Body body: NewUserData) : Response<UserInfoResponse>
+    suspend fun updateUserInfo(
+        @Url url: String,
+        @Part avatar: MultipartBody.Part,
+        @Part formUserData: MultipartBody.Part
+    ): Response<UserInfoResponse>
 
 }

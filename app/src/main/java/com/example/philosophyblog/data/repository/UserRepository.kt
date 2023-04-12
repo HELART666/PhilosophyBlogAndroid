@@ -1,10 +1,10 @@
 package com.example.philosophyblog.data.repository
 
 import com.example.philosophyblog.data.api.RemoteDataSource
-import com.example.philosophyblog.data.api.model.user.NewUserData
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.utils.BaseApiResponse
 import com.example.philosophyblog.utils.ScreenState
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -21,12 +21,14 @@ class UserRepository @Inject constructor(
 
     suspend fun updateUserInfo(
         url: String,
-        body: NewUserData
+        avatar: MultipartBody.Part,
+        formUserData: MultipartBody.Part
     ): ScreenState<UserInfoResponse> {
         return safeApiCall {
             remoteDataSource.updateUserInfo(
                 url = url,
-                body = body
+                avatar = avatar,
+                formUserData = formUserData
             )
         }
     }
