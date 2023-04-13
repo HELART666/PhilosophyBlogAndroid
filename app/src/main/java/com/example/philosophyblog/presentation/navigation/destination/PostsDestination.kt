@@ -5,9 +5,15 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.philosophyblog.presentation.screens.PostScreen
 
-fun NavGraphBuilder.posts() {
+fun NavGraphBuilder.posts(
+    onPostClick: (Int) -> Unit,
+    onPostAddClick: () -> Unit
+) {
     composable("posts") {
-        PostScreen()
+        PostScreen(
+            onPostClick = onPostClick,
+            onPostAddClick = onPostAddClick
+        )
     }
 }
 

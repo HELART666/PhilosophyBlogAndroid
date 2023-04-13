@@ -7,10 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.philosophyblog.data.api.model.user.NewUserFormData
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
-import com.example.philosophyblog.domain.usecases.GetUserEmailUseCase
-import com.example.philosophyblog.domain.usecases.GetUserInfoUseCase
-import com.example.philosophyblog.domain.usecases.GetUserLoginUseCase
-import com.example.philosophyblog.domain.usecases.UpdateUserInfoUseCase
+import com.example.philosophyblog.domain.usecases.*
 import com.example.philosophyblog.utils.ScreenState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +24,7 @@ class UserProfileViewModel @Inject constructor(
     private val getUserEmailUseCase: GetUserEmailUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
+    private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
     private val userLogin = MutableLiveData<String?>()
     val userLoginLiveData: LiveData<String?> = userLogin
@@ -52,7 +50,7 @@ class UserProfileViewModel @Inject constructor(
         userEmail.value = getUserEmailUseCase.execute()
     }
 
-    fun getUserInfo(url: String) {
+    private fun getUserInfo(url: String) {
         viewModelScope.launch {
             getUserInfoUseCase.execute(
                 url = url
@@ -94,5 +92,6 @@ class UserProfileViewModel @Inject constructor(
         }
     }
 
+    fun logout() = logoutUseCase.execute()
 
 }

@@ -8,10 +8,11 @@ import com.example.philosophyblog.presentation.navigation.destination.*
 @Composable
 fun PhilosophyBlogNavigation(
     navController: NavHostController,
+    startDestination: String
 ) {
     NavHost(
         navController = navController,
-        startDestination = "posts"
+        startDestination = startDestination
     ) {
         login(
             onLoginButtonClick = {
@@ -34,6 +35,24 @@ fun PhilosophyBlogNavigation(
                 navController.navigateToUserProfile()
             }
         )
-        posts()
+        posts(
+            onPostClick = { index ->
+                navController.navigateToFullPostScreen(
+                    postIndex = index
+                )
+            },
+            onPostAddClick = {
+                navController.navigateToAddPostScreen()
+            }
+        )
+        fullPost(
+            navController
+        )
+        addPost(
+            navController = navController,
+            onAddPostClick = {
+                navController.popBackStack()
+            }
+        )
     }
 }

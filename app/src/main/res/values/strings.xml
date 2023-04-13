@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">PhilosophyBlog</string>
+    <string name="philosophy">Philosophy</string>
+    <string name="blog">Blog</string>
     <string name="header_hello">Привет! &#128075;</string>
     <string name="subtitle_enter_your_data">Введите имя пользователя или Email</string>
     <string name="subtitle_enter_your_data_sign_in">Введите ваши данные для регистрации</string>

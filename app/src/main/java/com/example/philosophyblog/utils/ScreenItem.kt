@@ -12,8 +12,8 @@ sealed class ScreenItem(
     val icon: ImageVector
 ) {
 
-    object Home: ScreenItem("home", "Посты", Icons.Outlined.Home)
-    object Profile: ScreenItem("profile", "Профиль", Icons.Outlined.Person)
+    object Home: ScreenItem("posts", "Посты", Icons.Outlined.Home)
+    object Profile: ScreenItem("userProfile", "Профиль", Icons.Outlined.Person)
     object Users: ScreenItem("users", "Пользователи", Icons.Outlined.Person)
 
     object Items{

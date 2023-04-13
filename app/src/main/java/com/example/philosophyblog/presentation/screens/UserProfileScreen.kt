@@ -36,9 +36,8 @@ fun UserProfileScreen(
     var avatar: String? = null
     if (userInfo.value?.data?.avatarUrl != null && userInfo.value?.data?.avatarUrl?.isNotBlank() == true) {
         avatar =
-            "http://192.168.42.135:4444/uploads/users/avatars/${userInfo.value?.data?.login}-avatar.jpg"
+            "http://192.168.42.135:4444/${userInfo.value?.data?.avatarUrl}"
     }
-
 
     // извините меня пожалуйста те, кто это читает
     // бэкендер не захотел делать автозаполнение списка
@@ -74,6 +73,9 @@ fun UserProfileScreen(
                     )
                     .padding(
                         bottom = paddingValues.calculateBottomPadding()
+                    )
+                    .padding(
+                        bottom = 72.dp
                     )
                     .fillMaxHeight()
             ) {
@@ -122,17 +124,33 @@ fun UserProfileToolbar() {
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {}) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logo),
                         contentDescription = "PBLogo"
                     )
                 }
                 Text(
-                    text = stringResource(id = R.string.app_name),
+                    text = stringResource(id = R.string.philosophy),
                     modifier = Modifier
                         .padding(
                             start = dimensionResource(id = R.dimen.small_padding)
+                        ),
+                    color = colorResource(id = R.color.primary)
+                )
+                Text(
+                    text = stringResource(id = R.string.blog),
+                    color = colorResource(id = R.color.primary_second)
+                )
+            }
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_logout),
+                    contentDescription = "logout",
+                    tint = colorResource(id = R.color.primary),
+                    modifier = Modifier
+                        .padding(
+                            end = dimensionResource(id = R.dimen.small_padding)
                         )
                 )
             }
@@ -145,6 +163,7 @@ fun UserProfileCard(
     avatarUrl: String?,
     login: String,
     email: String,
+    editVisibility: Boolean = true,
     onEditUserProfileButton: () -> Unit,
 ) {
     Row(
@@ -195,37 +214,39 @@ fun UserProfileCard(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        Button(
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.white_background)
-            ),
-            shape = CircleShape,
-            onClick = { onEditUserProfileButton() },
-            border = BorderStroke(
-                2.dp, color = colorResource(id = R.color.primary),
-            ),
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(
-                    vertical = dimensionResource(id = R.dimen.smallest_padding)
-                )
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_edit),
-                contentDescription = "edit button icon",
+        if (editVisibility) {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.white_background)
+                ),
+                shape = CircleShape,
+                onClick = { onEditUserProfileButton() },
+                border = BorderStroke(
+                    2.dp, color = colorResource(id = R.color.primary),
+                ),
                 modifier = Modifier
+                    .fillMaxHeight()
                     .padding(
-                        end = dimensionResource(id = R.dimen.smallest_padding)
+                        vertical = dimensionResource(id = R.dimen.smallest_padding)
                     )
-                    .size(
-                        14.dp
-                    ),
-                tint = colorResource(id = R.color.primary)
-            )
-            Text(
-                text = stringResource(id = R.string.edit),
-                color = colorResource(id = R.color.primary)
-            )
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    contentDescription = "edit button icon",
+                    modifier = Modifier
+                        .padding(
+                            end = dimensionResource(id = R.dimen.smallest_padding)
+                        )
+                        .size(
+                            14.dp
+                        ),
+                    tint = colorResource(id = R.color.primary)
+                )
+                Text(
+                    text = stringResource(id = R.string.edit),
+                    color = colorResource(id = R.color.primary)
+                )
+            }
         }
     }
 }

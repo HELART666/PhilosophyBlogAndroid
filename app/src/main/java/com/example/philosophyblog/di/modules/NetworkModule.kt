@@ -5,7 +5,7 @@ import com.example.philosophyblog.data.api.UserService
 import com.example.philosophyblog.data.api.SignUpService
 import com.example.philosophyblog.data.api.helpers.AuthAuthenticator
 import com.example.philosophyblog.data.api.helpers.AuthInterceptor
-import com.example.philosophyblog.data.api.model.PostsService
+import com.example.philosophyblog.data.api.PostsService
 import com.example.philosophyblog.data.sharedprefs.AuthSharedPreferences
 import dagger.Module
 import dagger.Provides

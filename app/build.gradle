@@ -51,6 +51,7 @@ android {
 dependencies {
     def fragment_version = "1.5.6"
     def nav_version = "2.5.3"
+    def paging_version = "3.1.1"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
@@ -92,6 +93,13 @@ dependencies {
 
     // Images
     implementation("io.coil-kt:coil-compose:2.3.0")
+
+    // Paging
+    implementation("androidx.paging:paging-runtime:$paging_version")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha18")
+
+    // Splash Screen
+//    implementation 'androidx.core:core-splashscreen:1.1.0-alpha01'
 }
 
 kapt {

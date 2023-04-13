@@ -90,7 +90,7 @@ fun EditUserProfileScreen(
     var avatar: String? = null
     if (userInfoState.value?.data?.avatarUrl != null && userInfoState.value?.data?.avatarUrl?.isNotBlank() == true) {
         avatar =
-            "http://192.168.42.135:4444/uploads/users/avatars/${userInfoState.value?.data?.login}-avatar.jpg"
+            "http://192.168.42.135:4444/${userInfoState.value?.data?.avatarUrl}"
     }
 
     PhilosophyBlogTheme {
@@ -142,9 +142,6 @@ fun EditUserProfileScreen(
                     state = quoteState
                 )
                 UserBioHeader(text = "Направление")
-//                EditUserBioDescription(
-//                    state = philosophyDirectionState
-//                )
                 UserProfileDirectionsDropDownMenu(
                     selectedItem = philosophyDirectionState
                 )
@@ -221,7 +218,9 @@ fun EditUserProfileScreen(
                         .padding(
                             bottom = 36.dp
                         ),
-                ) {}
+                ) {
+                    Text(text = "Отредактировать")
+                }
             }
         }
     }
@@ -412,7 +411,9 @@ fun UserProfileDirectionsDropDownMenu(
             Icon(
                 icon, "dropDownMenuIcon", Modifier.clickable { expanded = !expanded }
             )
-        }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
     )
     DropdownMenu(
         expanded = expanded,

@@ -7,8 +7,8 @@ data class PostItem(
     val id: String,
     @SerializedName("title")
     val title: String,
-    @SerializedName("imageUrl")
-    val imageUrl: String? = null,
+    @SerializedName("imgUrl")
+    val imgUrl: String? = null,
     @SerializedName("description")
     val description: String,
     @SerializedName("text")
@@ -17,6 +17,8 @@ data class PostItem(
     val tags: List<String>? = null,
     @SerializedName("viewsCount")
     val viewsCount: String,
+    @SerializedName("user")
+    val user: PostUserInfo,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("updatedAt")
