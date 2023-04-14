@@ -1,6 +1,6 @@
 package com.example.philosophyblog.data.api
 
-import com.example.philosophyblog.data.api.model.RefreshTokenResponse
+import com.example.philosophyblog.data.api.model.user.ShortUserResponse
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -16,7 +16,10 @@ interface UserService {
     suspend fun updateUserInfo(
         @Url url: String,
         @Part avatar: MultipartBody.Part,
-        @Part formUserData: MultipartBody.Part
+        @Part formUserData: MultipartBody.Part,
     ): Response<UserInfoResponse>
+
+    @GET("api/users")
+    suspend fun getAllUsers(): Response<List<ShortUserResponse>>
 
 }

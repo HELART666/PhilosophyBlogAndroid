@@ -25,10 +25,16 @@ fun PhilosophyBlogNavigation(
         userProfile(
             onEditUserProfileButton = {
                 navController.navigateToEditUserProfile()
+            },
+            onLogoutClick = {
+                navController.navigateToLogin()
             }
         )
         editUserProfile(
-            navController
+            navController,
+            onBackClick = {
+                navController.popBackStack()
+            }
         )
         signUp(
             navToProfile = {
@@ -52,7 +58,11 @@ fun PhilosophyBlogNavigation(
             navController = navController,
             onAddPostClick = {
                 navController.popBackStack()
+            },
+            onBackClick = {
+                navController.popBackStack()
             }
         )
+        allUsers()
     }
 }

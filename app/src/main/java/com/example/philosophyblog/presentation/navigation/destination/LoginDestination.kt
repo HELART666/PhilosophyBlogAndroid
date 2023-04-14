@@ -1,10 +1,9 @@
 package com.example.philosophyblog.presentation.navigation.destination
 
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.philosophyblog.presentation.screens.LoginScreen
-import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
 
 fun NavGraphBuilder.login(
     onLoginButtonClick: () -> Unit,
@@ -16,4 +15,8 @@ fun NavGraphBuilder.login(
             onSignUpButtonClick = onSignUpButtonClick
         )
     }
+}
+
+fun NavController.navigateToLogin() {
+    navigate("login")
 }

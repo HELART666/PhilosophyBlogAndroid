@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -23,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
+import com.example.philosophyblog.utils.ScreenState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
 @OptIn(ExperimentalMaterialApi::class)
@@ -30,7 +32,9 @@ import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 fun UserProfileScreen(
     userProfileViewModel: UserProfileViewModel = hiltViewModel(),
     onEditUserProfileButton: () -> Unit,
+    onLogoutClick: () -> Unit,
 ) {
+    val logoutClickState = userProfileViewModel.isDialogShown.observeAsState()
     val email = userProfileViewModel.userEmailLiveData.observeAsState()
     val userInfo = userProfileViewModel.userInfoStateLiveData.observeAsState()
     var avatar: String? = null
@@ -54,7 +58,9 @@ fun UserProfileScreen(
     PhilosophyBlogTheme {
         Scaffold(
             topBar = {
-                UserProfileToolbar()
+                UserProfileToolbar(
+                    viewModel = userProfileViewModel
+                )
             },
             modifier = Modifier
                 .background(
@@ -63,50 +69,62 @@ fun UserProfileScreen(
                     ),
                 )
         ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .background(
-                        color = colorResource(
-                            id = R.color.white_background
-                        ),
+            if (userInfo.value !is ScreenState.Success) {
+                LoadingScreen()
+            } else {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .background(
+                            color = colorResource(
+                                id = R.color.white_background
+                            ),
+                        )
+                        .padding(
+                            bottom = paddingValues.calculateBottomPadding()
+                        )
+                        .padding(
+                            bottom = 72.dp
+                        )
+                        .fillMaxHeight()
+                ) {
+                    if (logoutClickState.value == true) {
+                        SimpleAlertDialog(
+                            viewModel = userProfileViewModel,
+                            onLogoutClick = onLogoutClick
+                        )
+                    }
+                    UserProfileCard(
+                        login = userInfo.value?.data?.login.toString(),
+                        email = email.value.toString(),
+                        onEditUserProfileButton = onEditUserProfileButton,
+                        avatarUrl = avatar
                     )
-                    .padding(
-                        bottom = paddingValues.calculateBottomPadding()
+                    UserInfo(
+                        age = userInfo.value?.data?.bio?.age ?: "Не указано",
+                        location = userInfo.value?.data?.bio?.location ?: "Не указано",
+                        bio = userInfo.value?.data?.bio?.bio ?: "Не указано",
+                        quote = userInfo.value?.data?.bio?.quote ?: "Не указано",
+                        philosophyDirection = userInfo.value?.data?.bio?.philosophyDirection
+                            ?: "Не указано",
+                        sex = userInfo.value?.data?.bio?.sex ?: "Не указано",
+                        firstCoord = personality?.get(0)?.toFloat() ?: 5F,
+                        secondCoord = personality?.get(1)?.toFloat() ?: 5F,
+                        thirdCoord = personality?.get(2)?.toFloat() ?: 5F,
+                        fourthCoord = personality?.get(3)?.toFloat() ?: 5F,
+                        goals = userInfo.value?.data?.bio?.goals ?: listOf("Не указаны"),
+                        qualities = userInfo.value?.data?.bio?.qualities ?: listOf("Не указаны")
                     )
-                    .padding(
-                        bottom = 72.dp
-                    )
-                    .fillMaxHeight()
-            ) {
-                UserProfileCard(
-                    login = userInfo.value?.data?.login.toString(),
-                    email = email.value.toString(),
-                    onEditUserProfileButton = onEditUserProfileButton,
-                    avatarUrl = avatar
-                )
-                UserInfo(
-                    age = userInfo.value?.data?.bio?.age ?: "Не указано",
-                    location = userInfo.value?.data?.bio?.location ?: "Не указано",
-                    bio = userInfo.value?.data?.bio?.bio ?: "Не указано",
-                    quote = userInfo.value?.data?.bio?.quote ?: "Не указано",
-                    philosophyDirection = userInfo.value?.data?.bio?.philosophyDirection
-                        ?: "Не указано",
-                    sex = userInfo.value?.data?.bio?.sex ?: "Не указано",
-                    firstCoord = personality?.get(0)?.toFloat() ?: 5F,
-                    secondCoord = personality?.get(1)?.toFloat() ?: 5F,
-                    thirdCoord = personality?.get(2)?.toFloat() ?: 5F,
-                    fourthCoord = personality?.get(3)?.toFloat() ?: 5F,
-                    goals = userInfo.value?.data?.bio?.goals ?: listOf("Не указаны"),
-                    qualities = userInfo.value?.data?.bio?.qualities ?: listOf("Не указаны")
-                )
+                }
             }
         }
     }
 }
 
 @Composable
-fun UserProfileToolbar() {
+fun UserProfileToolbar(
+    viewModel: UserProfileViewModel,
+) {
     TopAppBar(
         contentPadding = WindowInsets.systemBars
             .only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
@@ -143,15 +161,19 @@ fun UserProfileToolbar() {
                     color = colorResource(id = R.color.primary_second)
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = {
+                    viewModel.isDialogShow(true)
+                },
+                modifier = Modifier
+                    .padding(
+                        end = dimensionResource(id = R.dimen.small_padding)
+                    )
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_logout),
                     contentDescription = "logout",
                     tint = colorResource(id = R.color.primary),
-                    modifier = Modifier
-                        .padding(
-                            end = dimensionResource(id = R.dimen.small_padding)
-                        )
                 )
             }
         }
@@ -416,4 +438,53 @@ fun UserChipsRow(items: List<String>) {
             UserChip(item = goal)
         }
     }
+}
+
+@Composable
+fun SimpleAlertDialog(
+    viewModel: UserProfileViewModel,
+    onLogoutClick: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = { viewModel.isDialogShow(false) },
+        confirmButton = {
+            TextButton(onClick = {
+                viewModel.logout()
+                onLogoutClick()
+            })
+            {
+                Text(
+                    text = stringResource(id = R.string.confirm),
+                    style = MaterialTheme.typography.subtitle1,
+                    color = colorResource(id = R.color.primary),
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = {})
+            {
+                Text(
+                    text = stringResource(id = R.string.cancel),
+                    style = MaterialTheme.typography.subtitle1,
+                    color = colorResource(id = R.color.logout_color),
+                )
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(id = R.string.please_confirm),
+                style = MaterialTheme.typography.h4,
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.logout_question),
+                style = MaterialTheme.typography.subtitle2,
+            )
+        },
+        modifier = Modifier
+            .clip(
+                RoundedCornerShape(8.dp)
+            )
+    )
 }

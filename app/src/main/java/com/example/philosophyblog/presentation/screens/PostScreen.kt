@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
+import com.example.philosophyblog.utils.DateConverter
 
 @Composable
 fun PostScreen(
@@ -33,10 +34,10 @@ fun PostScreen(
 ) {
     val postsState = postsViewModel.postsLiveData.observeAsState()
     val posts = postsState.value?.data
-
+    val dateConverter = DateConverter()
 
     Scaffold(
-        topBar = { UserProfileToolbar() },
+        topBar = { AppToolbar() },
         floatingActionButton = {
             FloatingActionButtonAddPost(
                 onPostAddClick = onPostAddClick
@@ -58,7 +59,7 @@ fun PostScreen(
                     PostCard(
                         imageUrl = "http://192.168.42.135:4444/${post.imgUrl}",
                         header = post.title,
-                        date = post.createdAt,
+                        date = dateConverter.convertMongoDate(post.createdAt) ?: "Date",
                         postIndex = index,
                         onPostClick = { onPostClick(index) }
                     )

@@ -9,7 +9,8 @@ import com.example.philosophyblog.presentation.screens.EditUserProfileScreen
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 
 fun NavGraphBuilder.editUserProfile(
-    navController: NavController
+    navController: NavController,
+    onBackClick: () -> Unit
 ) {
     composable("editUserProfile") { backStackEntry ->
         val parentEntry = remember(backStackEntry) {
@@ -17,7 +18,8 @@ fun NavGraphBuilder.editUserProfile(
         }
         val parentViewModel = hiltViewModel<UserProfileViewModel>(parentEntry)
         EditUserProfileScreen(
-            userProfileViewModel = parentViewModel
+            userProfileViewModel = parentViewModel,
+            onBackClick = onBackClick
         )
     }
 }

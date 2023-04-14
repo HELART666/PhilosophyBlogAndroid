@@ -4,6 +4,7 @@
     <color name="primary_light">#522939C8</color>
     <color name="primary_second">#8CE3AF</color>
     <color name="selector_color">#FFA50E</color>
+    <color name="logout_color">#FF1A1A</color>
     <color name="white_background">#FFFFFF</color>
     <color name="grey_text">#616161</color>
     <color name="purple_700">#FF3700B3</color>

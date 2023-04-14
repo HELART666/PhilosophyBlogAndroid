@@ -10,10 +10,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,10 +27,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
-import com.example.philosophyblog.data.api.model.user.Bio
-import com.example.philosophyblog.data.api.model.user.User
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
 import com.example.philosophyblog.utils.TextFieldState
@@ -37,7 +35,8 @@ import com.example.philosophyblog.utils.TextFieldState
 @Composable
 fun AddPostScreen(
     viewModel: PostsViewModel,
-    onAddPostClick: () -> Unit
+    onAddPostClick: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val title = remember { TextFieldState() }
     val description = remember { TextFieldState() }
@@ -47,10 +46,17 @@ fun AddPostScreen(
     }
     PhilosophyBlogTheme() {
         Scaffold(
-            topBar = { UserProfileToolbar() }
+            topBar = {
+                NavBackToolbar(
+                    title = "Публикация размышлений"
+                ) {
+                    onBackClick()
+                }
+            }
         ) { paddingValues ->
             Column(
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .padding(
                         bottom = paddingValues.calculateBottomPadding()
                     )
@@ -97,11 +103,12 @@ fun AddPostScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            top = dimensionResource(id = R.dimen.small_padding)
+                            top = dimensionResource(id = R.dimen.small_padding),
+                            bottom = 72.dp
                         )
                 ) {
                     Text(
-                        text = "Отредактировать",
+                        text = "Опубликовать",
                         color = Color.White,
                         textAlign = TextAlign.Center,
                         modifier = Modifier

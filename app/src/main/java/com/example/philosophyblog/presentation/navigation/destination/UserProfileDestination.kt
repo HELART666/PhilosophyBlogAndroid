@@ -6,12 +6,16 @@ import androidx.navigation.compose.composable
 import com.example.philosophyblog.presentation.screens.UserProfileScreen
 
 fun NavGraphBuilder.userProfile(
-    onEditUserProfileButton: () -> Unit
+    onEditUserProfileButton: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     composable("userProfile") {
         UserProfileScreen(
             onEditUserProfileButton = {
                 onEditUserProfileButton()
+            },
+            onLogoutClick = {
+                onLogoutClick()
             }
         )
     }

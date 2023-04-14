@@ -11,6 +11,7 @@ import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
 fun NavGraphBuilder.addPost(
     navController: NavController,
     onAddPostClick: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     composable("addPost") { backStackEntry ->
         val parentEntry = remember(backStackEntry) {
@@ -19,7 +20,8 @@ fun NavGraphBuilder.addPost(
         val parentViewModel = hiltViewModel<PostsViewModel>(parentEntry)
         AddPostScreen(
             viewModel = parentViewModel,
-            onAddPostClick = onAddPostClick
+            onAddPostClick = onAddPostClick,
+            onBackClick = onBackClick
         )
     }
 }

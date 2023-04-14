@@ -4,14 +4,13 @@ import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.philosophyblog.data.api.model.user.NewUserFormData
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.domain.usecases.*
 import com.example.philosophyblog.utils.ScreenState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -32,7 +31,11 @@ class UserProfileViewModel @Inject constructor(
     val userEmailLiveData: LiveData<String?> = userEmail
     private val userInfoState = MutableLiveData<ScreenState<UserInfoResponse>>()
     val userInfoStateLiveData: LiveData<ScreenState<UserInfoResponse>> = userInfoState
+    val isDialogShown = MutableLiveData<Boolean>()
+    val dialogLiveData: LiveData<Boolean> = isDialogShown
 
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     init {
         getUserEmail()
@@ -50,14 +53,30 @@ class UserProfileViewModel @Inject constructor(
         userEmail.value = getUserEmailUseCase.execute()
     }
 
+    fun isDialogShow(boolean: Boolean) {
+        isDialogShown.value = boolean
+    }
+
     private fun getUserInfo(url: String) {
-        viewModelScope.launch {
-            getUserInfoUseCase.execute(
-                url = url
-            ).let { state ->
-                userInfoState.value = state
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                getUserInfoUseCase.execute(
+                    url = url
+                ).let { state ->
+                    withContext(Dispatchers.Main) {
+                        userInfoState.value = state
+                    }
+
+                }
             }
         }
+//        viewModelScope.launch {
+//            getUserInfoUseCase.execute(
+//                url = url
+//            ).let { state ->
+//                userInfoState.value = state
+//            }
+//        }
     }
 
     fun updateUserInfo(
@@ -78,18 +97,36 @@ class UserProfileViewModel @Inject constructor(
                 Gson().toJson(formUserData)
             )
 
-        viewModelScope.launch {
-            updateUserInfoUseCase.execute(
-                url = url,
-                avatar = avatarBody,
-                formUserData = formUserDataBody
-            ).let { state ->
-                userInfoState.value = state
-                getUserInfo(
-                    url = "http://192.168.42.135:4444/api/users/${userLogin.value}"
-                )
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                updateUserInfoUseCase.execute(
+                    url = url,
+                    avatar = avatarBody,
+                    formUserData = formUserDataBody
+                ).let { state ->
+                    userInfoState.value = state
+                    getUserInfo(
+                        url = "http://192.168.42.135:4444/api/users/${userLogin.value}"
+                    )
+                    withContext(Dispatchers.Main) {
+                        userInfoState.value = state
+                    }
+                }
             }
         }
+
+//        viewModelScope.launch {
+//            updateUserInfoUseCase.execute(
+//                url = url,
+//                avatar = avatarBody,
+//                formUserData = formUserDataBody
+//            ).let { state ->
+//                userInfoState.value = state
+//                getUserInfo(
+//                    url = "http://192.168.42.135:4444/api/users/${userLogin.value}"
+//                )
+//            }
+//        }
     }
 
     fun logout() = logoutUseCase.execute()

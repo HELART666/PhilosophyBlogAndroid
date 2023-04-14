@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.livedata.observeAsState
@@ -21,12 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
+import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.navigation.PhilosophyBlogNavigation
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.LoginViewModel
@@ -52,9 +53,18 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     bottomBar = {
                         BottomNavigation(
-                            currentScreenId = currentScreen.value.id) {
-                            navController.navigate(it.id)
-                            currentScreen.value = it
+                            currentScreenId = currentScreen.value.id
+                        ) {
+                            if (authState.value != null && it.id == "userProfile") {
+                                navController.navigate(it.id)
+                                currentScreen.value = it
+                            } else if (it.id == "userProfile") {
+                                navController.navigate("login")
+                                currentScreen.value = it
+                            } else {
+                                navController.navigate(it.id)
+                                currentScreen.value = it
+                            }
                         }
                     }
                 ) {
@@ -110,6 +120,7 @@ fun CoilImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(imageUrl)
                 .crossfade(true)
+                .placeholder(R.drawable.base_profile_avatar)
                 .memoryCachePolicy(
                     CachePolicy.DISABLED
                 )

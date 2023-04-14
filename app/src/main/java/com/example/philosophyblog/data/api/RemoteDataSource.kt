@@ -46,4 +46,6 @@ class RemoteDataSource @Inject constructor(
         avatar = avatar,
         formUserData = formUserData
     )
+
+    suspend fun getAllUsers() = userService.getAllUsers()
 }

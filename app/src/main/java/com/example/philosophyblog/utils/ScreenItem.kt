@@ -14,7 +14,7 @@ sealed class ScreenItem(
 
     object Home: ScreenItem("posts", "Посты", Icons.Outlined.Home)
     object Profile: ScreenItem("userProfile", "Профиль", Icons.Outlined.Person)
-    object Users: ScreenItem("users", "Пользователи", Icons.Outlined.Person)
+    object Users: ScreenItem("allUsers", "Пользователи", Icons.Outlined.Person)
 
     object Items{
         val list = listOf(

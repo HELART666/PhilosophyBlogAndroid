@@ -1,6 +1,7 @@
 package com.example.philosophyblog.data.repository
 
 import com.example.philosophyblog.data.api.RemoteDataSource
+import com.example.philosophyblog.data.api.model.user.ShortUserResponse
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.utils.BaseApiResponse
 import com.example.philosophyblog.utils.ScreenState
@@ -22,7 +23,7 @@ class UserRepository @Inject constructor(
     suspend fun updateUserInfo(
         url: String,
         avatar: MultipartBody.Part,
-        formUserData: MultipartBody.Part
+        formUserData: MultipartBody.Part,
     ): ScreenState<UserInfoResponse> {
         return safeApiCall {
             remoteDataSource.updateUserInfo(
@@ -30,6 +31,12 @@ class UserRepository @Inject constructor(
                 avatar = avatar,
                 formUserData = formUserData
             )
+        }
+    }
+
+    suspend fun getAllUsers(): ScreenState<List<ShortUserResponse>> {
+        return safeApiCall {
+            remoteDataSource.getAllUsers()
         }
     }
 

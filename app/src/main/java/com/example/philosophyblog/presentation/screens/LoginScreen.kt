@@ -116,7 +116,7 @@ fun LoginScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                bottom = 36.dp
+                                bottom = 72.dp
                             ),
                     ) {
                         Text(
@@ -137,9 +137,12 @@ fun LoginScreen(
     }
 }
 
-@Preview
+
 @Composable
-fun NavBackToolbar(title: String = "") {
+fun NavBackToolbar(
+    title: String = "",
+    onBackClick: () -> Unit,
+) {
     TopAppBar(
         backgroundColor = colorResource(id = R.color.white_background),
         elevation = 0.dp,
@@ -148,7 +151,9 @@ fun NavBackToolbar(title: String = "") {
             .asPaddingValues(),
     ) {
         IconButton(
-            onClick = {},
+            onClick = {
+                onBackClick()
+            },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_go_back_arrow),

@@ -32,6 +32,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.philosophyblog.R
 import com.example.philosophyblog.data.api.model.user.Bio
@@ -47,6 +48,7 @@ import com.example.philosophyblog.utils.TextFieldState
 @Composable
 fun EditUserProfileScreen(
     userProfileViewModel: UserProfileViewModel,
+    onBackClick: () -> Unit
 ) {
     val userInfoState = userProfileViewModel.userInfoStateLiveData.observeAsState()
     val ageState = remember { TextFieldState() }
@@ -96,7 +98,12 @@ fun EditUserProfileScreen(
     PhilosophyBlogTheme {
         Scaffold(
             topBar = {
-                NavBackToolbar(stringResource(id = R.string.edit_profile))
+                NavBackToolbar(
+                    stringResource(id = R.string.edit_profile),
+                    onBackClick = {
+                        onBackClick()
+                    }
+                )
             },
             modifier = Modifier
                 .background(
@@ -179,7 +186,7 @@ fun EditUserProfileScreen(
                 EditUserProfileSlider(
                     state = fourthCoord
                 )
-                // TODO EditUserBioDescription()
+
                 Button(
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = colorResource(id = R.color.primary)
@@ -216,10 +223,20 @@ fun EditUserProfileScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            bottom = 36.dp
+                            bottom = 72.dp
                         ),
                 ) {
-                    Text(text = "Отредактировать")
+                    Text(
+                        text = "Отредактировать",
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(
+                                vertical = 18.dp,
+                                horizontal = 16.dp
+                            ),
+                        style = MaterialTheme.typography.body1,
+                    )
                 }
             }
         }
