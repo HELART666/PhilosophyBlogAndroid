@@ -30,6 +30,7 @@ import com.example.philosophyblog.utils.DateConverter
 fun AllUsersScreen(
     viewModel: UserListViewModel = hiltViewModel(),
 ) {
+    val BASE_URL = "http://192.168.42.135:4444/"
     val dateConverter = DateConverter()
     val usersData = viewModel.usersLiveData.observeAsState()
     val usersList = usersData.value?.data
@@ -52,7 +53,7 @@ fun AllUsersScreen(
                 usersList?.size?.let { iter ->
                     items(iter) { index ->
                         UserCard(
-                            avatarUrl = "http://192.168.42.135:4444/uploads/users/avatars/${usersList[index].login}-avatar.jpeg",
+                            avatarUrl = "${BASE_URL}uploads/users/avatars/${usersList[index].login}-avatar.jpeg",
                             login = usersList[index].login,
                             createdAt = "В приложении с ${dateConverter.convertMongoDate(usersList[index].createdAt)}" ?: "Date"
                         )
@@ -115,4 +116,6 @@ fun UserCard(
                 .padding(horizontal = dimensionResource(id = R.dimen.smaller_padding))
         )
     }
+
+
 }

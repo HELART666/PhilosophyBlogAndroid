@@ -63,6 +63,7 @@ fun EditUserProfileScreen(
     philosophyDirectionState.text = userInfoState.value?.data?.bio?.philosophyDirection ?: ""
     val sexState = remember { TextFieldState() }
     sexState.text = userInfoState.value?.data?.bio?.sex ?: ""
+    val BASE_URL = "http://192.168.42.135:4444/"
 
     // извините меня пожалуйста те, кто это читает
     // бэкендер не захотел делать автозаполнение списка
@@ -92,7 +93,7 @@ fun EditUserProfileScreen(
     var avatar: String? = null
     if (userInfoState.value?.data?.avatarUrl != null && userInfoState.value?.data?.avatarUrl?.isNotBlank() == true) {
         avatar =
-            "http://192.168.42.135:4444/${userInfoState.value?.data?.avatarUrl}"
+            "${BASE_URL}${userInfoState.value?.data?.avatarUrl}"
     }
 
     PhilosophyBlogTheme {
@@ -195,7 +196,7 @@ fun EditUserProfileScreen(
                     onClick = {
                         bitmapState.value?.let { bitmap ->
                             userProfileViewModel.updateUserInfo(
-                                url = "http://192.168.42.135:4444/api/users/$userLogin",
+                                url = "${BASE_URL}api/users/$userLogin",
                                 avatar = bitmap,
                                 formUserData = NewUserFormData(
                                     oldLogin = userLogin!!,

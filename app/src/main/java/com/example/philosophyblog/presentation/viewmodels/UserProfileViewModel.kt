@@ -24,6 +24,7 @@ class UserProfileViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val updateUserInfoUseCase: UpdateUserInfoUseCase,
     private val logoutUseCase: LogoutUseCase,
+    private val getUserIdUseCase: GetUserIdUseCase,
 ) : ViewModel() {
     private val userLogin = MutableLiveData<String?>()
     val userLoginLiveData: LiveData<String?> = userLogin
@@ -33,6 +34,8 @@ class UserProfileViewModel @Inject constructor(
     val userInfoStateLiveData: LiveData<ScreenState<UserInfoResponse>> = userInfoState
     val isDialogShown = MutableLiveData<Boolean>()
     val dialogLiveData: LiveData<Boolean> = isDialogShown
+    private val userId = MutableLiveData<String?>()
+    val userIdLiveData: LiveData<String?> = userId
 
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -41,8 +44,9 @@ class UserProfileViewModel @Inject constructor(
         getUserEmail()
         getUserLogin()
         getUserInfo(
-            url = "http://192.168.42.135:4444/api/users/${userLogin.value}"
+            url = "${BASE_URL}api/users/${userLogin.value}"
         )
+        userId.value = getUserIdUseCase.execute()
     }
 
     private fun getUserLogin() {
@@ -106,7 +110,7 @@ class UserProfileViewModel @Inject constructor(
                 ).let { state ->
                     userInfoState.value = state
                     getUserInfo(
-                        url = "http://192.168.42.135:4444/api/users/${userLogin.value}"
+                        url = "${BASE_URL}api/users/${userLogin.value}"
                     )
                     withContext(Dispatchers.Main) {
                         userInfoState.value = state
@@ -130,5 +134,10 @@ class UserProfileViewModel @Inject constructor(
     }
 
     fun logout() = logoutUseCase.execute()
+
+
+    companion object {
+        private const val BASE_URL = "http://192.168.42.135:4444/"
+    }
 
 }

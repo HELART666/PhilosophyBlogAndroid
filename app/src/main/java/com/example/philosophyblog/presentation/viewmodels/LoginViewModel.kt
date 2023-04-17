@@ -22,6 +22,8 @@ class LoginViewModel @Inject constructor(
     private val getRefreshTokenToSharedPreferencesUseCase: GetRefreshTokenToSharedPreferencesUseCase,
     private val saveAccessTokenToSharedPreferencesUseCase: SaveAccessTokenToSharedPreferencesUseCase,
     private val saveRefreshTokenToSharedPreferencesUseCase: SaveRefreshTokenToSharedPreferencesUseCase,
+    private val saveUserIdUseCase: SaveUserIdUseCase,
+    private val getUserIdUseCase: GetUserIdUseCase,
 ) : ViewModel() {
     private val authResponse = MutableLiveData<ScreenState<AuthResponse>>()
     val authResponseLiveData: LiveData<ScreenState<AuthResponse>> = authResponse
@@ -57,6 +59,11 @@ class LoginViewModel @Inject constructor(
                     saveUserPasswordUseCase.execute(
                         password = password
                     )
+                    state.data?.userId?.let { userId ->
+                        saveUserIdUseCase.execute(
+                            userId = userId
+                        )
+                    }
                     state.data?.login?.let { email ->
                         saveUserEmailUseCase.execute(
                             email = email

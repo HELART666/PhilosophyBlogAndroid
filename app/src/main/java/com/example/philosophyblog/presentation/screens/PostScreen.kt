@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
+import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.DateConverter
 
 @Composable
@@ -57,7 +58,7 @@ fun PostScreen(
             if (posts != null) {
                 itemsIndexed(items = posts.toList()) { index, post ->
                     PostCard(
-                        imageUrl = "http://192.168.42.135:4444/${post.imgUrl}",
+                        imageUrl = "${BASE_URL}${post.imgUrl}",
                         header = post.title,
                         date = dateConverter.convertMongoDate(post.createdAt) ?: "Date",
                         postIndex = index,

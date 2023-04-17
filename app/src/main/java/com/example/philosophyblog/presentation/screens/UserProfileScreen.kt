@@ -24,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
+import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.ScreenState
 
 //@Preview(showSystemUi = true, device = "spec:width=411dp,height=891dp")
@@ -40,7 +41,7 @@ fun UserProfileScreen(
     var avatar: String? = null
     if (userInfo.value?.data?.avatarUrl != null && userInfo.value?.data?.avatarUrl?.isNotBlank() == true) {
         avatar =
-            "http://192.168.42.135:4444/${userInfo.value?.data?.avatarUrl}"
+            "${BASE_URL}${userInfo.value?.data?.avatarUrl}"
     }
 
     // извините меня пожалуйста те, кто это читает

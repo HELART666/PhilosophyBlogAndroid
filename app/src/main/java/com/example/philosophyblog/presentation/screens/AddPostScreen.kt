@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,11 +31,13 @@ import androidx.compose.ui.unit.dp
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
+import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 import com.example.philosophyblog.utils.TextFieldState
 
 @Composable
 fun AddPostScreen(
-    viewModel: PostsViewModel,
+    postViewModel: PostsViewModel,
+    userProfileViewModel: UserProfileViewModel,
     onAddPostClick: () -> Unit,
     onBackClick: () -> Unit,
 ) {
@@ -44,6 +47,8 @@ fun AddPostScreen(
     val bitmapState = remember {
         mutableStateOf<Bitmap?>(null)
     }
+    val userId = userProfileViewModel.userIdLiveData.observeAsState()
+
     PhilosophyBlogTheme() {
         Scaffold(
             topBar = {
@@ -91,12 +96,12 @@ fun AddPostScreen(
                     ),
                     shape = CircleShape,
                     onClick = {
-                        viewModel.addPost(
+                        postViewModel.addPost(
                             cover = bitmapState.value!!,
                             title = title.text,
                             description = description.text,
                             text = text.text,
-                            user = "642c0d1f139ec3baf8274e14"
+                            user = userId.value.toString()
                         )
                         onAddPostClick()
                     },

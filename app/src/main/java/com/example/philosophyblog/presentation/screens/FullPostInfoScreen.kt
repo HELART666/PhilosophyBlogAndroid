@@ -33,6 +33,7 @@ import com.example.philosophyblog.R
 import com.example.philosophyblog.data.api.model.posts.PostItem
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
+import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.ScreenState
 import kotlin.math.max
 import kotlin.math.min
@@ -104,7 +105,7 @@ fun ParallaxToolbar(
                     }) {
                 if (currentPost?.imgUrl != null) {
                     CoilImage(
-                        imageUrl = "http://192.168.42.135:4444/${currentPost.imgUrl}",
+                        imageUrl = "${BASE_URL}${currentPost.imgUrl}",
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(
@@ -176,7 +177,7 @@ fun Content(
     val posts = postState.value?.data
     val currentPost = posts?.get(postIndex)
     val currentAvatar =
-        "http://192.168.42.135:4444/${currentPost?.user?.avatarUrl}"
+        "${BASE_URL}${currentPost?.user?.avatarUrl}"
 
     LazyColumn(
         contentPadding = PaddingValues(top = AppBarExpendedHeight),
