@@ -37,6 +37,24 @@ class RemoteDataSource @Inject constructor(
         user = user
     )
 
+    suspend fun updatePost(
+        url: String,
+        cover: MultipartBody.Part,
+        title: MultipartBody.Part,
+        description: MultipartBody.Part,
+        text: MultipartBody.Part,
+        tags: MultipartBody.Part,
+        user: MultipartBody.Part,
+    ) = postsService.updatePost(
+        url = url,
+        cover = cover,
+        title = title,
+        description = description,
+        text = text,
+        tags = tags,
+        user = user
+    )
+
     suspend fun updateUserInfo(
         url: String,
         avatar: MultipartBody.Part,

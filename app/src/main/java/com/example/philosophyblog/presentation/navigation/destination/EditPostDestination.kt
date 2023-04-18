@@ -4,34 +4,47 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import com.example.philosophyblog.presentation.screens.AddPostScreen
+import androidx.navigation.navArgument
+import com.example.philosophyblog.presentation.screens.EditPostScreen
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
 import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 
-fun NavGraphBuilder.addPost(
+fun NavGraphBuilder.editPost(
     navController: NavController,
-    onAddPostClick: () -> Unit,
+    onUpdatePostClick: () -> Unit,
     onBackClick: () -> Unit
 ) {
-    composable("addPost") { backStackEntry ->
+    composable(
+        route = "editPost/{postId}",
+        arguments = listOf(
+            navArgument("postId") {
+                type = NavType.StringType
+                nullable = false
+            }
+        )) { backStackEntry ->
         val parentEntry = remember(backStackEntry) {
             navController.getBackStackEntry("posts")
         }
+        val arguments = requireNotNull(backStackEntry.arguments)
+        val postIndex = arguments.getString("postId")
         val userProfileEntry = remember(backStackEntry) {
             navController.getBackStackEntry("userProfile")
         }
         val parentViewModel = hiltViewModel<PostsViewModel>(parentEntry)
         val userProfileViewModel = hiltViewModel<UserProfileViewModel>(userProfileEntry)
-        AddPostScreen(
-            userProfileViewModel = userProfileViewModel,
+        EditPostScreen(
             postViewModel = parentViewModel,
-            onAddPostClick = onAddPostClick,
-            onBackClick = onBackClick
-        )
+            userProfileViewModel = userProfileViewModel,
+            onUpdatePostClick = onUpdatePostClick,
+            onBackClick = onBackClick,
+            postId = postIndex ?: "")
     }
 }
 
-fun NavController.navigateToAddPostScreen() {
-    navigate("addPost")
+fun NavController.navigateToEditPostScreen(
+    postId: String
+) {
+    navigate("editPost/$postId")
 }

@@ -7,12 +7,14 @@ import com.example.philosophyblog.presentation.screens.PostScreen
 
 fun NavGraphBuilder.posts(
     onPostClick: (Int) -> Unit,
-    onPostAddClick: () -> Unit
+    onPostAddClick: () -> Unit,
+    onPostEditClick: (String) -> Unit,
 ) {
     composable("posts") {
         PostScreen(
             onPostClick = onPostClick,
-            onPostAddClick = onPostAddClick
+            onPostAddClick = onPostAddClick,
+            onPostEditClick = onPostEditClick
         )
     }
 }

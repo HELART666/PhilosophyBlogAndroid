@@ -24,16 +24,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.ui.theme.PhilosophyBlogTheme
 import com.example.philosophyblog.presentation.viewmodels.UserListViewModel
+import com.example.philosophyblog.utils.Consts
+import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.DateConverter
 
 @Composable
 fun AllUsersScreen(
     viewModel: UserListViewModel = hiltViewModel(),
 ) {
-    val BASE_URL = "http://192.168.42.135:4444/"
+
     val dateConverter = DateConverter()
     val usersData = viewModel.usersLiveData.observeAsState()
     val usersList = usersData.value?.data
+
     PhilosophyBlogTheme() {
         Scaffold(
             topBar = {
@@ -46,14 +49,22 @@ fun AllUsersScreen(
                 modifier = Modifier
                     .padding(
                         horizontal = dimensionResource(id = R.dimen.small_padding)
+                    )
+                    .padding(
+                        bottom = 72.dp
                     ),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 usersList?.size?.let { iter ->
                     items(iter) { index ->
+                        var avatar: String? = null
+                        if (usersList[index].avatarUrl != null && usersList[index].avatarUrl?.isNotBlank() == true) {
+                            avatar =
+                                "${BASE_URL}${usersList[index].avatarUrl}"
+                        }
                         UserCard(
-                            avatarUrl = "${BASE_URL}uploads/users/avatars/${usersList[index].login}-avatar.jpeg",
+                            avatarUrl = avatar,
                             login = usersList[index].login,
                             createdAt = "В приложении с ${dateConverter.convertMongoDate(usersList[index].createdAt)}" ?: "Date"
                         )

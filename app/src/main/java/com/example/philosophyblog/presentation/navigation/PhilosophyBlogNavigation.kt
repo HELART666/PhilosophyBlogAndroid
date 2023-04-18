@@ -49,6 +49,11 @@ fun PhilosophyBlogNavigation(
             },
             onPostAddClick = {
                 navController.navigateToAddPostScreen()
+            },
+            onPostEditClick = { postId ->
+                navController.navigateToEditPostScreen(
+                    postId = postId
+                )
             }
         )
         fullPost(
@@ -64,5 +69,15 @@ fun PhilosophyBlogNavigation(
             }
         )
         allUsers()
+
+        editPost(
+            navController = navController,
+            onUpdatePostClick = {
+                navController.popBackStack()
+            },
+            onBackClick = {
+                navController.popBackStack()
+            }
+        )
     }
 }

@@ -1,5 +1,5 @@
 package com.example.philosophyblog.utils
 
 object Consts {
-    const val BASE_URL = "http://192.168.42.135:4444/"
+    const val BASE_URL = "http://192.168.43.165:4444/"
 }

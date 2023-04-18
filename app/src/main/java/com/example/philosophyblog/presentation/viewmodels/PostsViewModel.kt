@@ -10,6 +10,7 @@ import com.example.philosophyblog.data.api.model.posts.PostItem
 import com.example.philosophyblog.data.api.model.user.User
 import com.example.philosophyblog.domain.usecases.AddPostUseCase
 import com.example.philosophyblog.domain.usecases.GetAllPostsUseCase
+import com.example.philosophyblog.domain.usecases.UpdatePostUseCase
 import com.example.philosophyblog.utils.ScreenState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,11 +25,14 @@ import javax.inject.Inject
 class PostsViewModel @Inject constructor(
     private val getAllPostsUseCase: GetAllPostsUseCase,
     private val addPostUseCase: AddPostUseCase,
+    private val updatePostUseCase: UpdatePostUseCase
 ) : ViewModel() {
     private val postsState = MutableLiveData<ScreenState<List<PostItem>>>()
     val postsLiveData: LiveData<ScreenState<List<PostItem>>> = postsState
     private val sendState = MutableLiveData<ScreenState<PostItem>>()
     val sendData: LiveData<ScreenState<PostItem>> = sendState
+    private val updateState = MutableLiveData<ScreenState<PostItem>>()
+    val updateData: LiveData<ScreenState<PostItem>> = updateState
 
     init {
         getAllPosts()
@@ -85,6 +89,65 @@ class PostsViewModel @Inject constructor(
                 )
 
             addPostUseCase.execute(
+                cover = coverBody,
+                title = titleBody,
+                description = descriptionBody,
+                text = textBody,
+                tags = tagsBody,
+                user = userBody
+            ).let { state ->
+                sendState.value = state
+                Log.d("MYLOGAAA", "$state")
+                getAllPosts()
+            }
+        }
+    }
+
+    fun updatePost(
+        url: String,
+        cover: Bitmap,
+        title: String,
+        description: String,
+        text: String,
+        tags: List<String>? = null,
+        user: String,
+    ) {
+        viewModelScope.launch {
+            val stream = ByteArrayOutputStream()
+            cover.compress(Bitmap.CompressFormat.JPEG, 80, stream)
+            val byteArray = stream.toByteArray()
+            val coverBody = MultipartBody.Part.createFormData(
+                "cover", "photo",
+                byteArray.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, byteArray.size)
+            )
+            val titleBody = MultipartBody.Part
+                .createFormData(
+                    "title",
+                    title
+                )
+            val descriptionBody = MultipartBody.Part
+                .createFormData(
+                    "description",
+                    description
+                )
+            val textBody = MultipartBody.Part
+                .createFormData(
+                    "text",
+                    text
+                )
+            val tagsBody = MultipartBody.Part
+                .createFormData(
+                    "tags",
+                    Gson().toJson(tags)
+                )
+            val userBody = MultipartBody.Part
+                .createFormData(
+                    "user",
+                    user
+                )
+
+            updatePostUseCase.execute(
+                url = url,
                 cover = coverBody,
                 title = titleBody,
                 description = descriptionBody,

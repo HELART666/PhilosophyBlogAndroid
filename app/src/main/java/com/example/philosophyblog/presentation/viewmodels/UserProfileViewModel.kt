@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.example.philosophyblog.data.api.model.user.NewUserFormData
 import com.example.philosophyblog.data.api.model.user.UserInfoResponse
 import com.example.philosophyblog.domain.usecases.*
+import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.ScreenState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -135,9 +136,5 @@ class UserProfileViewModel @Inject constructor(
 
     fun logout() = logoutUseCase.execute()
 
-
-    companion object {
-        private const val BASE_URL = "http://192.168.42.135:4444/"
-    }
 
 }

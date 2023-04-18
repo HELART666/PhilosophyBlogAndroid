@@ -22,4 +22,16 @@ interface PostsService {
         @Part user: MultipartBody.Part,
     ) : Response<PostItem>
 
+    @Multipart
+    @PATCH
+    suspend fun updatePost(
+        @Url url: String,
+        @Part cover: MultipartBody.Part,
+        @Part title: MultipartBody.Part,
+        @Part description: MultipartBody.Part,
+        @Part text: MultipartBody.Part,
+        @Part tags: MultipartBody.Part,
+        @Part user: MultipartBody.Part,
+    ) : Response<PostItem>
+
 }

@@ -24,17 +24,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.philosophyblog.R
 import com.example.philosophyblog.presentation.viewmodels.PostsViewModel
+import com.example.philosophyblog.presentation.viewmodels.UserProfileViewModel
 import com.example.philosophyblog.utils.Consts.BASE_URL
 import com.example.philosophyblog.utils.DateConverter
 
 @Composable
 fun PostScreen(
+    userProfileViewModel: UserProfileViewModel = hiltViewModel(),
     postsViewModel: PostsViewModel = hiltViewModel(),
     onPostClick: (Int) -> Unit,
     onPostAddClick: () -> Unit,
+    onPostEditClick: (String) -> Unit,
 ) {
     val postsState = postsViewModel.postsLiveData.observeAsState()
     val posts = postsState.value?.data
+    val userId = userProfileViewModel.userIdLiveData.observeAsState()
     val dateConverter = DateConverter()
 
     Scaffold(
@@ -57,13 +61,27 @@ fun PostScreen(
         ) {
             if (posts != null) {
                 itemsIndexed(items = posts.toList()) { index, post ->
-                    PostCard(
-                        imageUrl = "${BASE_URL}${post.imgUrl}",
-                        header = post.title,
-                        date = dateConverter.convertMongoDate(post.createdAt) ?: "Date",
-                        postIndex = index,
-                        onPostClick = { onPostClick(index) }
-                    )
+                    if (post.user.id == userId.value) {
+                        PostCard(
+                            editable = true,
+                            imageUrl = "${BASE_URL}${post.imgUrl}",
+                            header = post.title,
+                            date = dateConverter.convertMongoDate(post.createdAt) ?: "Date",
+                            postIndex = index,
+                            onPostClick = { onPostClick(index) },
+                            onPostEditClick = { onPostEditClick(post.id)}
+                        )
+                    } else {
+                        PostCard(
+                            editable = false,
+                            imageUrl = "${BASE_URL}${post.imgUrl}",
+                            header = post.title,
+                            date = dateConverter.convertMongoDate(post.createdAt) ?: "Date",
+                            postIndex = index,
+                            onPostClick = { onPostClick(index) },
+                            onPostEditClick = {}
+                        )
+                    }
                 }
             }
         }
@@ -73,11 +91,13 @@ fun PostScreen(
 
 @Composable
 fun PostCard(
+    editable: Boolean,
     imageUrl: String?,
     header: String,
     date: String,
     onPostClick: (Int) -> Unit,
     postIndex: Int,
+    onPostEditClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -124,6 +144,15 @@ fun PostCard(
                 maxLines = 1,
                 style = MaterialTheme.typography.body2
             )
+
+            if (editable) {
+                IconButton(onClick = { onPostEditClick() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_edit),
+                        contentDescription = "edit icon"
+                    )
+                }
+            }
         }
     }
 }

@@ -8,5 +8,7 @@ data class ShortUserResponse(
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("login")
-    val login: String
+    val login: String,
+    @SerializedName("avatarUrl")
+    val avatarUrl: String?
 )
